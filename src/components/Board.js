@@ -7,7 +7,6 @@ import { moves, same_coords } from "../game/moves"
 import { first_color, apply_move } from "../game/rules"
 import { get_move } from "../game/engine"
 import newId from "../utils/newId"
-import Hint from "./Hint"
 
 export default class Board extends Component {
     constructor(props) {
