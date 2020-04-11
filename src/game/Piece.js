@@ -4,13 +4,19 @@ import "./Piece.css"
 import Draggable from "react-draggable"
 import clamp from "../utils/clamp"
 import { same_coords } from "./moves"
+import Hint from "./Hint"
+import newId from "../utils/newId"
 
 export default class Piece extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            hint: false,
+        }
         this.drop = this.drop.bind(this)
         this.hint = this.hint.bind(this)
+        this.stopHint = this.stopHint.bind(this)
     }
 
     getMouse(event) {
@@ -33,6 +39,7 @@ export default class Piece extends Component {
     }
 
     drop() {
+        this.stopHint()
         // if (!this.props.turn)
         //     return
         const mouse = this.getMouse(event);
@@ -46,7 +53,15 @@ export default class Piece extends Component {
     }
 
     hint() {
-        this.props.hint(this.props.moves)
+        this.setState({
+            hint: true,
+        })
+    }
+
+    stopHint() {
+        this.setState({
+            hint: false,
+        })
     }
 
     render() {
@@ -57,7 +72,17 @@ export default class Piece extends Component {
             transform: `translate(${coords.x * tileSize}px, ${coords.y * tileSize}px)`
         }
 
+        let hints = []
+        if (this.state.hint)
+            hints = this.props.moves.map(move =>
+                <Hint
+                    tileSize={tileSize}
+                    coords={move}
+                    key={newId("hint")}
+                />)
+
         return (
+            <>
             <Draggable
                 position={{
                     x: coords.x * tileSize,
@@ -71,12 +96,16 @@ export default class Piece extends Component {
             >
                 <img
                     className="piece"
+                    onMouseEnter={this.hint}
+                    onMouseLeave={this.stopHint}
                     style={style}
                     draggable={false}
                     src={pieces[this.props.color][this.props.type]}
                     alt={`${this.props.type}${this.props.color}`}
                 />
             </Draggable>
+            {hints}
+            </>
         )
     }
 }

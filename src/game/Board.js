@@ -5,7 +5,6 @@ import "./Board.css"
 import setup from "./setup"
 import { moves, same_coords } from "./moves"
 import newId from "../utils/newId"
-import Hint from "./Hint"
 import update from "immutability-helper"
 
 export default class Board extends Component {
@@ -14,10 +13,8 @@ export default class Board extends Component {
         this.state = {
             tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
             pieces: [],
-            hints: [],
             turn: "w",
         }
-        this.hint = this.hint.bind(this)
         this.move = this.move.bind(this)
         this.origin = React.createRef()
     }
@@ -31,14 +28,7 @@ export default class Board extends Component {
                     moved: {$set: true},
                 }
             }),
-            hints: [],
           })
-    }
-
-    hint(moves) {
-        this.setState({
-            hints: moves
-        })
     }
 
     setupGame() {
@@ -85,20 +75,11 @@ export default class Board extends Component {
                 tileSize={tileSize}
                 coords={piece.coords}
                 moves={moves(piece, this.state.pieces)}
-                hint={this.hint}
                 turn={this.state.turn === piece.color}
                 move={this.move}
                 origin={this.origin}
             />
         )
-
-        const hints = this.state.hints.map(move =>
-            <Hint
-                tileSize={tileSize}
-                coords={move}
-                key={newId("hint")}
-            />)
-
 
         return (
             <div
@@ -111,7 +92,6 @@ export default class Board extends Component {
             >
                 {tiles}
                 {pieces}
-                {hints}
             </div>
         )
     }
