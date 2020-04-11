@@ -1,4 +1,4 @@
-import { otherColor } from "./rules"
+import { other_color } from "./rules"
 
 const { minx, miny, maxx, maxy } = {
     minx: 0,
@@ -14,7 +14,7 @@ const no_collision = (move, pieces) => !pieces.some(piece => same_coords(piece.c
 const collision = (move, pieces) => pieces.some(piece => same_coords(piece.coords, move))
 const apply_move = (coords, dir) => ({ x: coords.x + dir.x, y: coords.y + dir.y })
 
-function straight_move (piece, dir, allies, ennemies) {
+function straight_move (piece, dir, allies, enemies) {
     const out = []
     let move = { ...piece.coords }
     while(true)
@@ -22,7 +22,7 @@ function straight_move (piece, dir, allies, ennemies) {
         move = apply_move(move, dir)
         if (!is_on_board(move) || collision(move, allies))
             return out
-        if (collision(move, ennemies))
+        if (collision(move, enemies))
         {
             out.push(move)
             return out
@@ -52,7 +52,7 @@ const movers = {
         apply_move(piece.coords, { x: -2, y: -1 }),
         apply_move(piece.coords, { x: -2, y: 1 }),
     ].filter(move => is_on_board(move)).filter(move => no_collision(move, allies)),
-    p: (piece, allies, ennemies) => {
+    p: (piece, allies, enemies) => {
         const ydir = piece.color === "w" ? -1 : 1
         const out = []
         const first = {
@@ -73,41 +73,41 @@ const movers = {
                 y: piece.coords.y + ydir,
             },
         ]
-        if (no_collision(first, allies.concat(ennemies))) {
+        if (no_collision(first, allies.concat(enemies))) {
             out.push(first)
-            if (!piece.moved && no_collision(second, allies.concat(ennemies)))
+            if (!piece.moved && no_collision(second, allies.concat(enemies)))
                 out.push(second)
         }
-        out.push(...sides.filter(side => collision(side, ennemies)))
+        out.push(...sides.filter(side => collision(side, enemies)))
         return out;
     },
-    r: (piece, allies, ennemies) => [
-        ...straight_move(piece, {x: 1, y: 0}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: 0}, allies, ennemies),
-        ...straight_move(piece, {x: 0, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: 0, y: -1}, allies, ennemies),
+    r: (piece, allies, enemies) => [
+        ...straight_move(piece, {x: 1, y: 0}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: 0}, allies, enemies),
+        ...straight_move(piece, {x: 0, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: 0, y: -1}, allies, enemies),
     ],
-    b: (piece, allies, ennemies) => [
-        ...straight_move(piece, {x: 1, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: 1, y: -1}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: -1}, allies, ennemies),
+    b: (piece, allies, enemies) => [
+        ...straight_move(piece, {x: 1, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: 1, y: -1}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: -1}, allies, enemies),
     ],
-    q: (piece, allies, ennemies) => [
-        ...straight_move(piece, {x: 1, y: 0}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: 0}, allies, ennemies),
-        ...straight_move(piece, {x: 0, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: 0, y: -1}, allies, ennemies),
-        ...straight_move(piece, {x: 1, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: 1, y: -1}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: 1}, allies, ennemies),
-        ...straight_move(piece, {x: -1, y: -1}, allies, ennemies),
+    q: (piece, allies, enemies) => [
+        ...straight_move(piece, {x: 1, y: 0}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: 0}, allies, enemies),
+        ...straight_move(piece, {x: 0, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: 0, y: -1}, allies, enemies),
+        ...straight_move(piece, {x: 1, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: 1, y: -1}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: 1}, allies, enemies),
+        ...straight_move(piece, {x: -1, y: -1}, allies, enemies),
     ],
 }
 
 export function moves(piece, pieces) {
     const mover = movers[piece.type]
     const allies = pieces.filter(p => p.color === piece.color)
-    const ennemies = pieces.filter(p => p.color === otherColor(piece.color))
-    return mover(piece, allies, ennemies)
+    const enemies = pieces.filter(p => p.color === other_color(piece.color))
+    return mover(piece, allies, enemies)
 }

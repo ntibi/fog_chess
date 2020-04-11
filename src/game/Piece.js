@@ -40,8 +40,8 @@ export default class Piece extends Component {
 
     drop() {
         this.stopHint()
-        // if (!this.props.turn)
-        //     return
+        if (!this.props.turn)
+            return
         const mouse = this.getMouse(event);
         const destination = {
             x: clamp(parseInt(mouse.x / this.props.tileSize), 0, 7),
@@ -53,6 +53,8 @@ export default class Piece extends Component {
     }
 
     hint() {
+        if (!this.props.turn)
+            return
         this.setState({
             hint: true,
         })

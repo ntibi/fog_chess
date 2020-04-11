@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Game from "./game/Game";
+import Board from "./game/Board";
+import FPS from "react-fps-stats"
 
 export default class App extends Component {
     constructor(props) {
@@ -8,7 +9,15 @@ export default class App extends Component {
 
     render() {
         return (
-            <Game />
+            <>
+            <FPS/>
+            <Board
+            controllers={{
+                b: "computer",
+                w: "human",
+            }}
+            />
+            </>
         )
     }
 }

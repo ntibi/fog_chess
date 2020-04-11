@@ -4,8 +4,9 @@ import Piece from "./Piece"
 import "./Board.css"
 import setup from "./setup"
 import { moves, same_coords } from "./moves"
+import { apply_move, other_color, first_color } from "./rules"
+import { get_move } from "./engine"
 import newId from "../utils/newId"
-import update from "immutability-helper"
 
 export default class Board extends Component {
     constructor(props) {
@@ -13,21 +14,33 @@ export default class Board extends Component {
         this.state = {
             tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
             pieces: [],
-            turn: "w",
+            turn: first_color,
         }
         this.move = this.move.bind(this)
         this.origin = React.createRef()
     }
 
+    add_moves(pieces) {
+        return pieces.map(piece => ({
+            ...piece,
+            moves: moves(piece, pieces)
+        }))
+    }
+
     move(src, dst) {
-        const pieceIndex = this.state.pieces.findIndex(p => same_coords(p.coords, src))
+        let {
+            pieces,
+            turn,
+        } = apply_move(src, dst, this.state.pieces)
+        pieces = this.add_moves(pieces)
         this.setState({
-            pieces: update(this.state.pieces, {
-                [pieceIndex]: {
-                    coords: {$set: dst},
-                    moved: {$set: true},
-                }
-            }),
+            pieces,
+            turn,
+          }, () => {
+              if (this.props.controllers[this.state.turn] === "computer") {
+                const { src, dst } = get_move(pieces, turn)
+                this.move(src, dst)
+              }
           })
     }
 
@@ -41,14 +54,15 @@ export default class Board extends Component {
                 id: newId("piece"),
             })
         })
-
-        this.setState({
-            pieces,
-        })
+        return pieces
     }
 
     componentDidMount() {
-        this.setupGame()
+        let pieces = this.setupGame()
+        pieces = this.add_moves(pieces)
+        this.setState({
+            pieces
+        })
     }
 
     render() {
@@ -74,7 +88,7 @@ export default class Board extends Component {
                 color={piece.color}
                 tileSize={tileSize}
                 coords={piece.coords}
-                moves={moves(piece, this.state.pieces)}
+                moves={piece.moves}
                 turn={this.state.turn === piece.color}
                 move={this.move}
                 origin={this.origin}
