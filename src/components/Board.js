@@ -4,7 +4,7 @@ import Piece from "./Piece"
 import "./Board.css"
 import setup from "../game/setup"
 import { moves, same_coords } from "../game/moves"
-import { first_color, apply_move } from "../game/rules"
+import { first_color, apply_move, compute_visible, maxx, maxy } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
 
@@ -37,7 +37,7 @@ export default class Board extends Component {
             pieces,
             turn,
         }, async () => {
-            if (this.props.controllers[this.state.turn] === "computer") {
+            if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
                 this.move(src, dst)
             }
@@ -67,21 +67,29 @@ export default class Board extends Component {
 
     render() {
         const { tileSize } = this.state
+    
+        const visible = compute_visible(this.state.pieces, this.props.controls)
 
-        const tiles = []
-        for (let i = 0; i < 8 * 8; i++) {
-            const coords = { x: i % 8, y: Math.floor(i / 8) }
-            tiles.push(
-                <Tile
-                    key={i}
-                    coords={coords}
-                    tileSize={tileSize}
-                    color={!((i % 8 + Math.floor(i / 8)) % 2) ? "light" : "dark"}
-                />
-            )
-        }
+        const tiles = [];
 
-        const pieces = this.state.pieces.map(piece =>
+        [...Array(maxy + 1).keys()].forEach(y => {
+            [...Array(maxx + 1).keys()].forEach(x => {
+                const coords = {x, y}
+                tiles.push(
+                    <Tile
+                        key={`${x} ${y}`}
+                        coords={coords}
+                        tileSize={tileSize}
+                        color={!((x + y) % 2) ? "light" : "dark"}
+                        visible={visible.find(t => t.x === x && t.y === y)}
+                    />
+                )
+            })
+        })
+
+
+
+        const pieces = this.state.pieces.filter(piece => visible.find(c => same_coords(piece.coords, c))).map(piece =>
             <Piece
                 key={piece.id}
                 type={piece.type}

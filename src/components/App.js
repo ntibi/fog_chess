@@ -10,13 +10,10 @@ export default class App extends Component {
     render() {
         return (
             <>
-            <FPS/>
-            <Board
-            controllers={{
-                b: "computer",
-                w: "human",
-            }}
-            />
+                <FPS />
+                <Board
+                    controls={"w"}
+                />
             </>
         )
     }

@@ -1,11 +1,4 @@
-import { other_color } from "./rules"
-
-const { minx, miny, maxx, maxy } = {
-    minx: 0,
-    miny: 0,
-    maxx: 7,
-    maxy: 7,
-}
+import { other_color, minx, maxx, miny, maxy } from "./rules"
 
 export const same_coords = (c1, c2) => c1.x === c2.x && c1.y === c2.y
 

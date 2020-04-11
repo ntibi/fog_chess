@@ -11,18 +11,14 @@
     background-color: #eeeed2;
 }
 
-.tile.dark.highlighted {
-    background-color: #bbca44;
-}
-
-.tile.light.highlighted {
-    background-color: #f6f681;
-}
-
 .coordinate {
     position: absolute;
     margin: 0;
     bottom: 0;
     right: 0;
     font-size: 75%;
+}
+
+.tile.fogged {
+    background-color: #5a5a5a;
 }
