@@ -35,7 +35,6 @@ const width = 2;
     .forEach(x =>
         [...Array(width * 2 + 1).keys()]
             .forEach(y => filter.push({ x: x - width, y: y - width })))
-console.log(filter)
 
 export function fog_strength(coords, visible_tiles) {
     return 1 -
