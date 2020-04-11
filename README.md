@@ -29,3 +29,6 @@
 
 
 - [ ] indicate that the computer is thinking
+
+
+- [ ] highlight the tile of the last computer move
