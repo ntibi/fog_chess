@@ -7,7 +7,7 @@ import { moves, same_coords } from "../game/moves"
 import { first_color, apply_move, maxx, maxy } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
-import { compute_visible, fog_distance } from "../game/fog"
+import { compute_visible, fog_strength } from "../game/fog"
 
 export default class Board extends Component {
     constructor(props) {
@@ -71,7 +71,7 @@ export default class Board extends Component {
     
         const allies = pieces.filter(piece => piece.color === this.props.controls)
 
-        const visible_tiles = compute_visible(allies) // TODO do not call the function in render
+        const visible_tiles = compute_visible(allies)
 
         const tiles = [];
 
@@ -86,7 +86,7 @@ export default class Board extends Component {
                         tileSize={tileSize}
                         color={!((x + y) % 2) ? "light" : "dark"}
                         visible={visible}
-                        fog_strength={!visible && fog_distance(coords, allies)}
+                        fog_strength={fog_strength(coords, visible_tiles)}
                     />
                 )
             })

@@ -1,4 +1,4 @@
-import { is_on_board } from "./moves"
+import { is_on_board, same_coords } from "./moves"
 import { pawn_dir } from "./rules"
 
 export function compute_visible(allies) {
@@ -29,13 +29,21 @@ export function compute_visible(allies) {
     return visible
 }
 
-export function fog_distance(coords, allies) {
-    if (!allies.length)
-        return false
-    return Math.min(...allies.map(piece => {
-        const dx = coords.x - piece.coords.x;
-        const dy = coords.y - piece.coords.y;
+const filter = []
+const width = 2;
+[...Array(width * 2 + 1).keys()]
+    .forEach(x =>
+        [...Array(width * 2 + 1).keys()]
+            .forEach(y => filter.push({ x: x - width, y: y - width })))
+console.log(filter)
 
-        return Math.sqrt(dx * dx + dy * dy);
+export function fog_strength(coords, visible_tiles) {
+    return 1 -
+    filter
+    .map(f => ({
+        x: coords.x + f.x,
+        y: coords.y + f.y,
     }))
+    .map(c => visible_tiles.find(tc => same_coords(tc, c)))
+    .reduce((acc, v) => acc + Number(!!v), 0) / filter.length
 }
