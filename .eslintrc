@@ -1,0 +1,10 @@
+{
+    "plugins": [
+        "react"
+    ],
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "extends": ["eslint:all", "plugin:react/all"],
+}

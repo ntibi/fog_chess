@@ -1,0 +1,8 @@
+.piece {
+    z-index: 20;
+    position: absolute;
+}
+
+.piece.dragged {
+    z-index: 30;
+}

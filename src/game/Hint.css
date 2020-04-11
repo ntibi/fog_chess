@@ -1,0 +1,7 @@
+.hint {
+    background-color: #00000045;
+    border-radius: 50%;
+    display: inline-block;
+    z-index: 10;
+    position: absolute;
+}
