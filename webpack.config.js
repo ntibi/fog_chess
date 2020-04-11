@@ -18,7 +18,11 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        use: ["svg-url-loader"]
+        use: [ "svg-url-loader" ]
+      },
+      {
+        test: /\.worker\.js$/,
+        use: ['worker-loader']
       }
     ]
   },

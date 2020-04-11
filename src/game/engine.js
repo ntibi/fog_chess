@@ -1,12 +1,11 @@
-export function get_move(pieces, turn) {
-    const allies = pieces.filter(piece => piece.color === turn)
-    const enemies = pieces.filter(piece => piece.color !== turn)
+import Engine from './engine.worker.js';
 
-    const available = allies.filter(piece => piece.moves.length > 0)
-    const piece = available[Math.floor(Math.random() * available.length)];
-    const move = piece.moves[Math.floor(Math.random() * piece.moves.length)];
-    return {
-        src: piece.coords,
-        dst: move,
-    }
+const engine = new Engine()
+
+export async function get_move(pieces, turn) {
+    return new Promise((resolve, reject) => {
+        engine.onmessage = (e) => { resolve(e.data) };
+        engine.onerror = (e) => { reject(e) };
+        engine.postMessage({pieces, turn});
+    })
 }

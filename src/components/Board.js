@@ -5,8 +5,8 @@ import "./Board.css"
 import setup from "../game/setup"
 import { moves, same_coords } from "../game/moves"
 import { first_color, apply_move } from "../game/rules"
-import { get_move } from "../game/engine"
 import newId from "../utils/newId"
+import { get_move } from "../game/engine"
 
 export default class Board extends Component {
     constructor(props) {
@@ -36,9 +36,9 @@ export default class Board extends Component {
         this.setState({
             pieces,
             turn,
-        }, () => {
+        }, async () => {
             if (this.props.controllers[this.state.turn] === "computer") {
-                const { src, dst } = get_move(pieces, turn)
+                const { src, dst } = await get_move(pieces, turn)
                 this.move(src, dst)
             }
         })
