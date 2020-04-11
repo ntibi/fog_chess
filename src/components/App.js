@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Board from "./game/Board";
+import Board from "./Board";
 import FPS from "react-fps-stats"
 
 export default class App extends Component {

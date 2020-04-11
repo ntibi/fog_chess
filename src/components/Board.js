@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import Tile from "./Tile"
 import Piece from "./Piece"
 import "./Board.css"
-import setup from "./setup"
-import { moves, same_coords } from "./moves"
-import { apply_move, other_color, first_color } from "./rules"
-import { get_move } from "./engine"
+import setup from "../game/setup"
+import { moves, same_coords } from "../game/moves"
+import { first_color, apply_move } from "../game/rules"
+import { get_move } from "../game/engine"
 import newId from "../utils/newId"
+import Hint from "./Hint"
 
 export default class Board extends Component {
     constructor(props) {
@@ -36,12 +37,12 @@ export default class Board extends Component {
         this.setState({
             pieces,
             turn,
-          }, () => {
-              if (this.props.controllers[this.state.turn] === "computer") {
+        }, () => {
+            if (this.props.controllers[this.state.turn] === "computer") {
                 const { src, dst } = get_move(pieces, turn)
                 this.move(src, dst)
-              }
-          })
+            }
+        })
     }
 
     setupGame() {
@@ -70,7 +71,7 @@ export default class Board extends Component {
 
         const tiles = []
         for (let i = 0; i < 8 * 8; i++) {
-            const coords = { x: i % 8, y: Math.floor(i / 8 )}
+            const coords = { x: i % 8, y: Math.floor(i / 8) }
             tiles.push(
                 <Tile
                     key={i}
@@ -81,7 +82,7 @@ export default class Board extends Component {
             )
         }
 
-        const pieces = this.state.pieces.map(piece => 
+        const pieces = this.state.pieces.map(piece =>
             <Piece
                 key={piece.id}
                 type={piece.type}

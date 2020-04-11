@@ -3,7 +3,7 @@ import pieces from "./Pieces"
 import "./Piece.css"
 import Draggable from "react-draggable"
 import clamp from "../utils/clamp"
-import { same_coords } from "./moves"
+import { same_coords } from "../game/moves"
 import Hint from "./Hint"
 import newId from "../utils/newId"
 
