@@ -25,3 +25,6 @@
 
 
 - [ ] wasm in webworker
+
+
+- [ ] lint + clean code (camelcase snakecase)
