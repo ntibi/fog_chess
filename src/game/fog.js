@@ -1,11 +1,13 @@
 import { is_on_board, same_coords } from "./moves"
 import { pawn_dir } from "./rules"
 
+export const is_visible = (visible, coords) => visible.some(v => same_coords(v, coords))
+
 export function compute_visible(allies) {
     const visible = []
 
     allies.forEach(piece => {
-        if (visible.indexOf(piece.coords) === -1)
+        if (!is_visible(visible, piece.coords))
             visible.push(piece.coords)
         if (piece.type === "p") {
             const ydir = pawn_dir[piece.color];
@@ -20,11 +22,11 @@ export function compute_visible(allies) {
                 y: piece.coords.y + ydir,
             }]
                 .filter(move => is_on_board(move))
-                .filter(move => visible.indexOf(move) === -1)
+                .filter(move => !is_visible(visible, move))
             )
         }
         piece.moves
-            .forEach(move => visible.indexOf(move) === -1 && visible.push(move))
+            .forEach(move => !is_visible(visible, move) && visible.push(move))
     })
     return visible
 }
