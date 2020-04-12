@@ -7,7 +7,7 @@ import { moves, same_coords } from "../game/moves"
 import { first_color, apply_move, maxx, maxy } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
-import { compute_visible, fog_strength } from "../game/fog"
+import { compute_visible, fog_strength, is_visible } from "../game/fog"
 
 export default class Board extends Component {
     constructor(props) {
@@ -21,6 +21,10 @@ export default class Board extends Component {
         this.origin = React.createRef()
 
         this.history = []
+    }
+
+    last_moves(n) {
+        return this.history.slice(this.history.length - n)
     }
 
     add_moves(pieces) {
@@ -82,6 +86,10 @@ export default class Board extends Component {
         const allies = pieces.filter(piece => piece.color === this.props.controls)
 
         const visible_tiles = compute_visible(allies)
+        this.last_moves(1).forEach(last => {
+            if (last.ate && !is_visible(visible_tiles, last.move.dst))
+                visible_tiles.push(last.move.dst)
+        })
 
         const tiles = [];
 
@@ -97,7 +105,7 @@ export default class Board extends Component {
                         color={!((x + y) % 2) ? "light" : "dark"}
                         visible={visible}
                         fog_strength={fog_strength(coords, visible_tiles)}
-                        highlighted={visible ? this.history.slice(this.history.length - 1).some(m => same_coords(m.move.dst, { x, y })) : false}
+                        highlighted={visible ? this.last_moves(1).some(m => same_coords(m.move.dst, { x, y })) : false}
                     />
                 )
             })

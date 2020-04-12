@@ -1,9 +1,5 @@
 # TODO
 
-
-- [ ] when a piece dies, the tile must stay visible after the enemy move
-
-
 - [ ] dev the move engine
 
 
