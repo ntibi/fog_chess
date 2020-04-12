@@ -13,11 +13,12 @@ export default class Piece extends Component {
         super(props);
         this.state = {
             hint: false,
-            dragging_enabled: true,
+            disable_drag: false,
         }
         this.drop = this.drop.bind(this)
         this.hint = this.hint.bind(this)
-        this.stopHint = this.stopHint.bind(this)
+        this.stop_hint = this.stop_hint.bind(this)
+        this.mouse_down = this.mouse_down.bind(this)
     }
 
     getMouse(event) {
@@ -39,21 +40,12 @@ export default class Piece extends Component {
         }
     }
 
-    cancel(e) {
-        e.preventDefault()
-        this.stopDragging()
-    }
-
-    stopDragging() {
-        this.setState({
-            dragging_enabled: false,
-        }, () => this.setState({
-            dragging_enabled: true,
-        }))
-    }
-
     drop() {
-        this.stopHint()
+        if (this.state.disable_drag)
+            return this.setState({
+                disable_drag: false,
+            })
+        this.stop_hint()
         if (!this.props.turn)
             return
         const mouse = this.getMouse(event);
@@ -74,10 +66,26 @@ export default class Piece extends Component {
         })
     }
 
-    stopHint() {
+    stop_hint() {
         this.setState({
             hint: false,
         })
+    }
+
+    mouse_down(e) {
+        if (e.button === 2)
+            this.stop_dragging()
+    }
+
+    stop_dragging() {
+        this.setState({
+            disable_drag: true,
+        })
+    }
+
+    cancel(e) {
+        e.preventDefault()
+        return false
     }
 
     render() {
@@ -110,12 +118,13 @@ export default class Piece extends Component {
                 onClick={this.hint}
                 defaultClassNameDragging="dragged"
                 allowAnyClick={false}
-                disabled={!this.state.dragging_enabled}
+                disabled={this.props.disable_drag}
+                onMouseDown={this.mouse_down}
             >
                 <img
                     className="piece"
                     onMouseEnter={this.hint}
-                    onMouseLeave={this.stopHint}
+                    onMouseLeave={this.stop_hint}
                     onContextMenu={this.cancel}
                     style={style}
                     draggable={false}
