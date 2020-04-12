@@ -25,3 +25,6 @@
 
 
 - [ ] indicate that the computer is thinking
+
+
+- [ ] wasm in webworker
