@@ -31,3 +31,6 @@
 
 
 - [ ] allow drawing/marking on board
+
+
+- [ ] the dragging doesn't stop on right mouse down but on right mouse up
