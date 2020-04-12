@@ -34,3 +34,9 @@
 
 
 - [ ] the dragging doesn't stop on right mouse down but on right mouse up
+
+
+- [ ] measure the real tile size (might be 1px off)
+
+
+- [ ] the pieces seem ~1px off from the tile center
