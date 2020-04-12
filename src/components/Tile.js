@@ -13,7 +13,7 @@ export default class Tile extends Component {
         return (
             <div
                 style={style}
-                className={`tile ${this.props.color}`}
+                className={`tile ${this.props.color} ${this.props.highlighted ? "highlighted" : ""}`}
             >
                 {!this.props.visible &&
                     <Fog

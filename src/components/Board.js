@@ -19,6 +19,8 @@ export default class Board extends Component {
         }
         this.move = this.move.bind(this)
         this.origin = React.createRef()
+
+        this.history = []
     }
 
     add_moves(pieces) {
@@ -32,7 +34,15 @@ export default class Board extends Component {
         let {
             pieces,
             turn,
+            ate,
         } = apply_move(src, dst, this.state.pieces)
+        this.history.push({
+            move: {
+                src,
+                dst,
+            },
+            ate,
+        })
         pieces = this.add_moves(pieces)
         this.setState({
             pieces,
@@ -78,7 +88,7 @@ export default class Board extends Component {
         [...Array(maxy + 1).keys()].forEach(y => {
             [...Array(maxx + 1).keys()].forEach(x => {
                 const coords = {x, y}
-                const visible = visible_tiles.find(t => t.x === x && t.y === y)
+                const visible = visible_tiles.find(t => same_coords(t, { x, y }))
                 tiles.push(
                     <Tile
                         key={`${x} ${y}`}
@@ -87,6 +97,7 @@ export default class Board extends Component {
                         color={!((x + y) % 2) ? "light" : "dark"}
                         visible={visible}
                         fog_strength={fog_strength(coords, visible_tiles)}
+                        highlighted={visible ? this.history.slice(this.history.length - 1).some(m => same_coords(m.move.dst, { x, y })) : false}
                     />
                 )
             })

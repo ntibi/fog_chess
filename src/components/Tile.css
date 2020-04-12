@@ -11,6 +11,14 @@
     background-color: #eeeed2;
 }
 
+.tile.dark.highlighted {
+    background-color: #bbca44;
+}
+
+.tile.light.highlighted {
+    background-color: #f6f681;
+}
+
 .coordinate {
     position: absolute;
     margin: 0;

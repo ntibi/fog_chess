@@ -20,11 +20,13 @@ export const pawn_dir = {
 
 export function apply_move(src, dst, pieces) {
     const piece = pieces.find(p => same_coords(p.coords, src))
+    const ate = pieces.find(p => same_coords(p.coords, dst))
     pieces = pieces.filter(p => !same_coords(p.coords, dst))
     piece.coords = dst
     piece.moved = true
     return {
         pieces,
-        turn: other_color(piece.color)
+        turn: other_color(piece.color),
+        ate,
     }
 }
