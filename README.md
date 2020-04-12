@@ -18,9 +18,6 @@
 - [ ] move computation heavy functions away from the render functions
 
 
-- [ ] right click to stop dragging
-
-
 - [ ] allow click move (in addition of dragging)
 
 

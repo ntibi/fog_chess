@@ -13,6 +13,7 @@ export default class Piece extends Component {
         super(props);
         this.state = {
             hint: false,
+            dragging_enabled: true,
         }
         this.drop = this.drop.bind(this)
         this.hint = this.hint.bind(this)
@@ -36,6 +37,19 @@ export default class Piece extends Component {
             x: mouse.x - origin.x,
             y: mouse.y - origin.y,
         }
+    }
+
+    cancel(e) {
+        e.preventDefault()
+        this.stopDragging()
+    }
+
+    stopDragging() {
+        this.setState({
+            dragging_enabled: false,
+        }, () => this.setState({
+            dragging_enabled: true,
+        }))
     }
 
     drop() {
@@ -95,11 +109,14 @@ export default class Piece extends Component {
                 onStart={this.hint}
                 onClick={this.hint}
                 defaultClassNameDragging="dragged"
+                allowAnyClick={false}
+                disabled={!this.state.dragging_enabled}
             >
                 <img
                     className="piece"
                     onMouseEnter={this.hint}
                     onMouseLeave={this.stopHint}
+                    onContextMenu={this.cancel}
                     style={style}
                     draggable={false}
                     src={pieces[this.props.color][this.props.type]}
