@@ -72,9 +72,9 @@ const movers = {
                 y: piece.coords.y + ydir,
             },
         ]
-        if (no_collision(first, allies.concat(enemies))) {
+        if (is_on_board(first) && no_collision(first, allies.concat(enemies))) {
             out.push(first)
-            if (!piece.moved && no_collision(second, allies.concat(enemies)))
+            if (!piece.moved && is_on_board(second) && no_collision(second, allies.concat(enemies)))
                 out.push(second)
         }
         out.push(...sides.filter(side => collision(side, enemies)))
