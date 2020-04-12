@@ -80,6 +80,11 @@ export default class Board extends Component {
         })
     }
 
+    cancel(e) {
+        e.preventDefault()
+        return false
+    }
+
     render() {
         const { tileSize, pieces } = this.state
     
@@ -134,6 +139,7 @@ export default class Board extends Component {
                     width: `${tileSize * 8}px`,
                     height: `${tileSize * 8}px`,
                 }}
+                onContextMenu={this.cancel}
                 ref={this.origin}
             >
                 {tiles}
