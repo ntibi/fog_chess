@@ -28,3 +28,6 @@
 
 
 - [ ] lint + clean code (camelcase snakecase)
+
+
+- [ ] allow drawing/marking on board
