@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Tile from "./Tile"
 import Piece from "./Piece"
+import Over from "./Over"
 import "./Board.css"
 import setup from "../game/setup"
 import { moves, same_coords } from "../game/moves"
@@ -42,6 +43,7 @@ export default class Board extends Component {
             pieces,
             turn,
             ate,
+            winner,
         } = apply_move(src, dst, this.state.pieces)
         this.history.push({
             move: {
