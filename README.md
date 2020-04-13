@@ -6,9 +6,6 @@
 - [ ] handle victory/defeat/draw conditions
 
 
-- [ ] handle pawn promotions
-
-
 - [ ] when you drop a piece to put it back, the hints should still render
 
 

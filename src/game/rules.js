@@ -18,12 +18,19 @@ export const pawn_dir = {
     b: 1,
 }
 
+export const promotable = ["p"]
+export const promote_rank = [0, 7, 5]
+
 export function apply_move(src, dst, pieces) {
     const piece = pieces.find(p => same_coords(p.coords, src))
     const ate = pieces.find(p => same_coords(p.coords, dst))
     pieces = pieces.filter(p => !same_coords(p.coords, dst))
     piece.coords = dst
     piece.moved = true
+    if (promotable.includes(piece.type) && promote_rank.includes(piece.coords.y)) {
+        piece.type = "q"
+        piece.promoted = true
+    }
     return {
         pieces,
         turn: other_color(piece.color),
