@@ -92,7 +92,6 @@ export default class Board extends Component {
     mouse_down(e) {
         switch (e.button) {
             case 0:
-            case 2:
                 this.setState({
                     selected: {}
                 })
