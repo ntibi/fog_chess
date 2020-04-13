@@ -3,6 +3,7 @@ import "./Tile.css"
 import Fog from "./Fog"
 
 export default class Tile extends Component {
+
     render() {
         const { coords, tileSize } = this.props;
         const style = {

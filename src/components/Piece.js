@@ -72,20 +72,31 @@ export default class Piece extends Component {
         })
     }
 
-    mouse_down(e) {
-        if (e.button === 2)
-            this.stop_dragging()
-    }
-
     stop_dragging() {
         this.setState({
             disable_drag: true,
         })
     }
 
-    cancel(e) {
-        e.preventDefault()
-        return false
+    stop_hint_and_dragging() {
+        this.setState({
+            hint: false,
+            disable_drag: true,
+        })
+    }
+
+    mouse_down(e) {
+        switch (e.button) {
+            case 0:
+                if (this.props.ally) {
+                    e.stopPropagation()
+                    this.props.select(this.props.coords)
+                }
+                break;
+            case 2:
+                this.stop_hint_and_dragging()
+                break;
+        }
     }
 
     render() {
@@ -97,11 +108,12 @@ export default class Piece extends Component {
         }
 
         let hints = []
-        if (this.state.hint)
+        if (this.state.hint || this.props.selected)
             hints = this.props.moves.map(move =>
                 <Hint
                     tileSize={tileSize}
                     coords={move}
+                    click_move={() => this.props.move(this.props.coords, move)}
                     key={newId("hint")}
                 />)
 
@@ -115,7 +127,6 @@ export default class Piece extends Component {
                 bounds={{ left: -tileSize / 2, top: -tileSize / 2, right: tileSize * 7.5, bottom: tileSize * 7.5 }}
                 onStop={this.drop}
                 onStart={this.hint}
-                onClick={this.hint}
                 defaultClassNameDragging="dragged"
                 allowAnyClick={false}
                 disabled={this.props.disable_drag}
@@ -123,9 +134,6 @@ export default class Piece extends Component {
             >
                 <img
                     className="piece"
-                    onMouseEnter={this.hint}
-                    onMouseLeave={this.stop_hint}
-                    onContextMenu={this.cancel}
                     style={style}
                     draggable={false}
                     src={pieces[this.props.color][this.props.type]}

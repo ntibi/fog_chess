@@ -16,8 +16,11 @@ export default class Board extends Component {
             tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
             pieces: [],
             turn: first_color,
+            selected: {},
         }
         this.move = this.move.bind(this)
+        this.select = this.select.bind(this)
+        this.mouse_down = this.mouse_down.bind(this)
         this.origin = React.createRef()
 
         this.history = []
@@ -51,6 +54,7 @@ export default class Board extends Component {
         this.setState({
             pieces,
             turn,
+            selected: {},
         }, async () => {
             if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
@@ -85,6 +89,23 @@ export default class Board extends Component {
         return false
     }
 
+    mouse_down(e) {
+        switch (e.button) {
+            case 0:
+            case 2:
+                this.setState({
+                    selected: {}
+                })
+                break;
+        }
+    }
+
+    select(coords) {
+        this.setState({
+            selected: coords,
+        })
+    }
+
     render() {
         const { tileSize, pieces } = this.state
     
@@ -102,6 +123,9 @@ export default class Board extends Component {
             [...Array(maxx + 1).keys()].forEach(x => {
                 const coords = {x, y}
                 const visible = visible_tiles.find(t => same_coords(t, { x, y }))
+                let highlighted = visible ? this.last_moves(1).some(m => same_coords(m.move.dst, { x, y })) : false
+                if (same_coords(this.state.selected, { x, y }))
+                    highlighted = true
                 tiles.push(
                     <Tile
                         key={`${x} ${y}`}
@@ -110,7 +134,7 @@ export default class Board extends Component {
                         color={!((x + y) % 2) ? "light" : "dark"}
                         visible={visible}
                         fog_strength={fog_strength(coords, visible_tiles)}
-                        highlighted={visible ? this.last_moves(1).some(m => same_coords(m.move.dst, { x, y })) : false}
+                        highlighted={highlighted}
                     />
                 )
             })
@@ -128,6 +152,9 @@ export default class Board extends Component {
                 moves={piece.moves}
                 turn={this.state.turn === piece.color}
                 move={this.move}
+                select={this.select}
+                selected={same_coords(this.state.selected, piece.coords)}
+                ally={piece.color === this.props.controls}
                 origin={this.origin}
             />
         )
@@ -139,6 +166,7 @@ export default class Board extends Component {
                     width: `${tileSize * 8}px`,
                     height: `${tileSize * 8}px`,
                 }}
+                onMouseDown={this.mouse_down}
                 onContextMenu={this.cancel}
                 ref={this.origin}
             >

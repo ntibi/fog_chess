@@ -4,5 +4,5 @@
 }
 
 .piece.dragged {
-    z-index: 30;
+    z-index: 50;
 }
