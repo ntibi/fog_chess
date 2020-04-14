@@ -126,9 +126,14 @@ export default class Board extends Component {
     }
 
     select(coords) {
-        this.setState({
-            selected: coords,
-        })
+        if (same_coords(coords, this.state.selected))
+            this.setState({
+                selected: {},
+            })
+        else
+            this.setState({
+                selected: coords,
+            })
     }
 
     render() {

@@ -34,6 +34,3 @@
 
 
 - [ ] the pieces seem ~1px off from the tile center
-
-
-- [ ] toggle selected piece if clicked a second time
