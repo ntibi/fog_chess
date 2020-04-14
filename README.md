@@ -34,3 +34,6 @@
 
 
 - [ ] the pieces seem ~1px off from the tile center
+
+
+- [ ] right clic drag stop does not clear the hints
