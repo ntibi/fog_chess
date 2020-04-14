@@ -12,9 +12,6 @@
 - [ ] move computation heavy functions away from the render functions
 
 
-- [ ] allow click move (in addition of dragging)
-
-
 - [ ] indicate that the computer is thinking
 
 
