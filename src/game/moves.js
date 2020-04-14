@@ -5,14 +5,14 @@ export const same_coords = (c1, c2) => c1.x === c2.x && c1.y === c2.y
 export const is_on_board = (move) => move.x >= minx && move.x <= maxx && move.y >= miny && move.y <= maxy
 export const no_collision = (move, pieces) => !pieces.some(piece => same_coords(piece.coords, move))
 export const collision = (move, pieces) => pieces.some(piece => same_coords(piece.coords, move))
-export const apply_move = (coords, dir) => ({ x: coords.x + dir.x, y: coords.y + dir.y })
+export const apply = (coords, dir) => ({ x: coords.x + dir.x, y: coords.y + dir.y })
 
 function straight_move (piece, dir, allies, enemies) {
     const out = []
     let move = { ...piece.coords }
     while(true)
     {
-        move = apply_move(move, dir)
+        move = apply(move, dir)
         if (!is_on_board(move) || collision(move, allies))
             return out
         if (collision(move, enemies))
@@ -26,27 +26,27 @@ function straight_move (piece, dir, allies, enemies) {
 
 const movers = {
     k: (piece, allies) => [
-        apply_move(piece.coords, { x: -1, y: -1 }),
-        apply_move(piece.coords, { x: 0, y: -1 }),
-        apply_move(piece.coords, { x: 1, y: -1 }),
-        apply_move(piece.coords, { x: -1, y: 0 }),
-        apply_move(piece.coords, { x: 1, y: 0 }),
-        apply_move(piece.coords, { x: -1, y: 1 }),
-        apply_move(piece.coords, { x: 0, y: 1 }),
-        apply_move(piece.coords, { x: 1, y: 1 }),
+        apply(piece.coords, { x: -1, y: -1 }),
+        apply(piece.coords, { x: 0, y: -1 }),
+        apply(piece.coords, { x: 1, y: -1 }),
+        apply(piece.coords, { x: -1, y: 0 }),
+        apply(piece.coords, { x: 1, y: 0 }),
+        apply(piece.coords, { x: -1, y: 1 }),
+        apply(piece.coords, { x: 0, y: 1 }),
+        apply(piece.coords, { x: 1, y: 1 }),
     ]
     .filter(move => is_on_board(move))
     .filter(move => no_collision(move, allies))
     ,
     n: (piece, allies) => [
-        apply_move(piece.coords, { x: -1, y: -2 }),
-        apply_move(piece.coords, { x: 1, y: -2 }),
-        apply_move(piece.coords, { x: 2, y: -1 }),
-        apply_move(piece.coords, { x: 2, y: 1 }),
-        apply_move(piece.coords, { x: 1, y: 2 }),
-        apply_move(piece.coords, { x: -1, y: 2 }),
-        apply_move(piece.coords, { x: -2, y: -1 }),
-        apply_move(piece.coords, { x: -2, y: 1 }),
+        apply(piece.coords, { x: -1, y: -2 }),
+        apply(piece.coords, { x: 1, y: -2 }),
+        apply(piece.coords, { x: 2, y: -1 }),
+        apply(piece.coords, { x: 2, y: 1 }),
+        apply(piece.coords, { x: 1, y: 2 }),
+        apply(piece.coords, { x: -1, y: 2 }),
+        apply(piece.coords, { x: -2, y: -1 }),
+        apply(piece.coords, { x: -2, y: 1 }),
     ]
     .filter(move => is_on_board(move))
     .filter(move => no_collision(move, allies))
