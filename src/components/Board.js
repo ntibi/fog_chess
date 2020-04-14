@@ -18,13 +18,27 @@ export default class Board extends Component {
             pieces: [],
             turn: first_color,
             selected: {},
+            over: false,
         }
         this.move = this.move.bind(this)
         this.select = this.select.bind(this)
         this.mouse_down = this.mouse_down.bind(this)
+        this.restart = this.restart.bind(this)
         this.origin = React.createRef()
 
         this.history = []
+    }
+
+    restart() {
+        this.reset_game()
+    }
+
+    game_over({ winner }) {
+        this.setState({
+            over: {
+                winner,
+            }
+        })
     }
 
     last_moves(n) {
@@ -58,6 +72,8 @@ export default class Board extends Component {
             turn,
             selected: {},
         }, async () => {
+            if (winner)
+                this.game_over({ winner })
             if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
                 this.move(src, dst)
@@ -65,7 +81,7 @@ export default class Board extends Component {
         })
     }
 
-    setupGame() {
+    get_default_pieces() {
         const pieces = []
 
         setup.forEach(piece => {
@@ -78,12 +94,20 @@ export default class Board extends Component {
         return pieces
     }
 
-    componentDidMount() {
-        let pieces = this.setupGame()
+    reset_game() {
+        let pieces = this.get_default_pieces()
         pieces = this.add_moves(pieces)
         this.setState({
-            pieces
+            pieces,
+            over: false,
+            turn: first_color,
+            selected: {},
+            over: false,
         })
+    }
+
+    componentDidMount() {
+        this.reset_game()
     }
 
     cancel(e) {
@@ -109,7 +133,7 @@ export default class Board extends Component {
 
     render() {
         const { tileSize, pieces } = this.state
-    
+
         const allies = pieces.filter(piece => piece.color === this.props.controls)
 
         const visible_tiles = compute_visible(allies)
@@ -122,7 +146,7 @@ export default class Board extends Component {
 
         [...Array(maxy + 1).keys()].forEach(y => {
             [...Array(maxx + 1).keys()].forEach(x => {
-                const coords = {x, y}
+                const coords = { x, y }
                 const visible = visible_tiles.find(t => same_coords(t, { x, y }))
                 let highlighted = visible ? this.last_moves(1).some(m => same_coords(m.move.dst, { x, y })) : false
                 if (same_coords(this.state.selected, { x, y }))
@@ -156,6 +180,7 @@ export default class Board extends Component {
                 select={this.select}
                 selected={same_coords(this.state.selected, piece.coords)}
                 ally={piece.color === this.props.controls}
+                can_move={!this.state.over}
                 origin={this.origin}
             />
         )
@@ -171,6 +196,13 @@ export default class Board extends Component {
                 onContextMenu={this.cancel}
                 ref={this.origin}
             >
+                {this.state.over &&
+                    <Over
+                        winner={this.state.over.winner}
+                        won={this.state.over.winner === this.props.controls}
+                        restart={this.restart}
+                    />}
+
                 {tiles}
                 {pieces_to_render}
             </div>

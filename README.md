@@ -3,9 +3,6 @@
 - [ ] dev the move engine
 
 
-- [ ] handle victory/defeat/draw conditions
-
-
 - [ ] when you drop a piece to put it back, the hints should still render
 
 

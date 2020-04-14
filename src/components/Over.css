@@ -1,0 +1,43 @@
+div.over {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+}
+
+div.over > div {
+    position: relative;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50%;
+    margin: auto;
+    background-color: #AAAAAA;
+    opacity: 0.7;
+}
+
+div.over > div:hover {
+    opacity: 0.95;
+}
+
+div.over > div > p {
+    margin: auto;
+    font-size: xx-large;
+    font-weight: bolder;
+    padding: 5%;
+}
+
+div.over > div > button {
+    margin: 2%;
+    font-size: x-large;
+    font-weight: bold;
+    padding: 2%;
+    border: none;
+    background-color: #999999;
+}
+
+div.over > div > button:hover {
+    background-color: #777777;
+}

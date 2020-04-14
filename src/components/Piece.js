@@ -45,6 +45,8 @@ export default class Piece extends Component {
             return this.setState({
                 disable_drag: false,
             })
+        if (!this.props.can_move)
+            return
         this.stop_hint()
         if (!this.props.turn)
             return
@@ -78,13 +80,6 @@ export default class Piece extends Component {
         })
     }
 
-    stop_hint_and_dragging() {
-        this.setState({
-            hint: false,
-            disable_drag: true,
-        })
-    }
-
     mouse_down(e) {
         switch (e.button) {
             case 0:
@@ -94,7 +89,7 @@ export default class Piece extends Component {
                 }
                 break;
             case 2:
-                this.stop_hint_and_dragging()
+                this.stop_dragging()
                 break;
         }
     }
@@ -108,7 +103,7 @@ export default class Piece extends Component {
         }
 
         let hints = []
-        if (this.state.hint || this.props.selected)
+        if (this.props.can_move && (this.state.hint || this.props.selected))
             hints = this.props.moves.map(move =>
                 <Hint
                     tileSize={tileSize}
@@ -129,7 +124,6 @@ export default class Piece extends Component {
                 onStart={this.hint}
                 defaultClassNameDragging="dragged"
                 allowAnyClick={false}
-                disabled={this.props.disable_drag}
                 onMouseDown={this.mouse_down}
             >
                 <img
