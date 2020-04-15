@@ -73,7 +73,7 @@ export default class Board extends Component {
             selected: {},
         }, async () => {
             if (winner)
-                this.game_over({ winner })
+                return this.game_over({ winner })
             if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
                 this.move(src, dst)
