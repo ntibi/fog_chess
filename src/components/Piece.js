@@ -103,7 +103,7 @@ export default class Piece extends Component {
         }
 
         let hints = []
-        if (this.props.can_move && (this.state.hint || this.props.selected))
+        if (this.props.can_move && this.props.turn && (this.state.hint || this.props.selected))
             hints = this.props.moves.map(move =>
                 <Hint
                     tileSize={tileSize}

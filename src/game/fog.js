@@ -4,7 +4,13 @@ import { pawn_dir } from "./rules"
 export const is_visible = (visible, coords) => visible.some(v => same_coords(v, coords))
 
 export function compute_visible(allies) {
-    const visible = []
+    const visible = [];
+
+    // [...Array(8 + 1).keys()].forEach(y => {
+    //     [...Array(8 + 1).keys()].forEach(x => {
+    //         visible.push({x, y})
+    //     })})
+    //     return visible
 
     allies.forEach(piece => {
         if (!is_visible(visible, piece.coords))
