@@ -78,7 +78,7 @@ onmessage = ({data: {turn, pieces}}) => {
     const enemies = pieces.filter(piece => piece.color !== player)
     const initial = evaluate(pieces, player)
 
-    const { move, value } = best_move(pieces, player, 3)
+    const { move, value } = best_move(pieces, player, 2)
     console.log(JSON.stringify(move, null, 4))
 
     const t1 = performance.now()

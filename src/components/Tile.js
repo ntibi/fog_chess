@@ -11,16 +11,27 @@ export default class Tile extends Component {
             height: `${tileSize}px`,
             transform: `translate(${coords.x * tileSize}px, ${coords.y * tileSize}px)`
         }
+
+        let visible_coords
+        if (this.props.visible_coords)
+            visible_coords = <p
+                className="coordinate"
+            >
+                {`${this.props.coords.x} ${this.props.coords.y}`}
+            </p>
+        let fog
+        if (!this.props.visible)
+            fog = <Fog
+                tileSize={tileSize}
+                strength={this.props.fog_strength}
+            />
         return (
             <div
                 style={style}
                 className={`tile ${this.props.color} ${this.props.highlighted ? "highlighted" : ""}`}
             >
-                {!this.props.visible &&
-                    <Fog
-                        tileSize={tileSize}
-                        strength={this.props.fog_strength}
-                    />}
+                {fog}
+                {visible_coords}
             </div>
         )
     }

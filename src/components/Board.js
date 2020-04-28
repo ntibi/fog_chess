@@ -9,16 +9,20 @@ import { first_color, apply_move, maxx, maxy } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
 import { compute_visible, fog_strength, is_visible } from "../game/fog"
+import Interface from "./interface/Interface"
+import { Container, Row, Col } from 'react-bootstrap';
 
 export default class Board extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
+            tileSize: 0,
             pieces: [],
             turn: first_color,
             selected: {},
             over: false,
+            coords: true,
+            fog: true,
         }
         this.move = this.move.bind(this)
         this.select = this.select.bind(this)
@@ -106,8 +110,20 @@ export default class Board extends Component {
         })
     }
 
+    resize() {
+        this.setState({
+            tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
+        }) 
+    }
+
     componentDidMount() {
+        this.resize()
+        window.addEventListener("resize", this.resize.bind(this));
         this.reset_game()
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.resize.bind(this));
     }
 
     cancel(e) {
@@ -162,9 +178,10 @@ export default class Board extends Component {
                         coords={coords}
                         tileSize={tileSize}
                         color={!((x + y) % 2) ? "light" : "dark"}
-                        visible={visible}
+                        visible={!this.state.fog || visible}
                         fog_strength={fog_strength(coords, visible_tiles)}
                         highlighted={highlighted}
+                        visible_coords={this.state.coords}
                     />
                 )
             })
@@ -172,7 +189,7 @@ export default class Board extends Component {
 
 
 
-        const pieces_to_render = pieces.filter(piece => visible_tiles.find(c => same_coords(piece.coords, c))).map(piece =>
+        const pieces_to_render = (!this.state.fog ? pieces : pieces.filter(piece => visible_tiles.find(c => same_coords(piece.coords, c)))).map(piece =>
             <Piece
                 key={piece.id}
                 type={piece.type}
@@ -191,26 +208,38 @@ export default class Board extends Component {
         )
 
         return (
-            <div
-                className="board"
-                style={{
-                    width: `${tileSize * 8}px`,
-                    height: `${tileSize * 8}px`,
-                }}
-                onMouseDown={this.mouse_down}
-                onContextMenu={this.cancel}
-                ref={this.origin}
-            >
-                {this.state.over &&
-                    <Over
-                        winner={this.state.over.winner}
-                        won={this.state.over.winner === this.props.controls}
-                        restart={this.restart}
-                    />}
+            <Container fluid style={{width: tileSize * 8}}>
+                <Row>
+                    <div
+                        className="board"
+                        style={{
+                            width: `${tileSize * 8}px`,
+                            height: `${tileSize * 8}px`,
+                        }}
+                        onMouseDown={this.mouse_down}
+                        onContextMenu={this.cancel}
+                        ref={this.origin}
+                    >
+                        {this.state.over &&
+                            <Over
+                                winner={this.state.over.winner}
+                                won={this.state.over.winner === this.props.controls}
+                                restart={this.restart}
+                            />}
 
-                {tiles}
-                {pieces_to_render}
-            </div>
+                        {tiles}
+                        {pieces_to_render}
+                    </div>
+                </Row>
+                <Row>
+                    <Interface
+                        coords={this.state.coords}
+                        toggle_coords={() => this.setState({ coords: !this.state.coords })}
+                        fog={this.state.fog}
+                        toggle_fog={() => this.setState({ fog: !this.state.fog })}
+                    />
+                </Row>
+            </Container>
         )
     }
 }

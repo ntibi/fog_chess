@@ -1,6 +1,6 @@
 .board {
     position: relative;
-    outline: 1px solid black;
     margin: auto;
+    outline: 1px solid black;
     z-index: 0;
 }
