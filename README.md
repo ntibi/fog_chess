@@ -15,9 +15,6 @@
 - [ ] move computation heavy functions away from the render functions
 
 
-- [ ] indicate that the computer is thinking
-
-
 - [ ] wasm in webworker
 
 

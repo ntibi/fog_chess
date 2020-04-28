@@ -21,7 +21,7 @@ export default class Board extends Component {
             turn: first_color,
             selected: {},
             over: false,
-            coords: true,
+            coords: false,
             fog: true,
         }
         this.move = this.move.bind(this)
@@ -208,7 +208,7 @@ export default class Board extends Component {
         )
 
         return (
-            <Container fluid style={{width: tileSize * 8}}>
+            <Container fluid style={{ width: tileSize * 8 }}>
                 <Row>
                     <div
                         className="board"
@@ -231,14 +231,13 @@ export default class Board extends Component {
                         {pieces_to_render}
                     </div>
                 </Row>
-                <Row>
-                    <Interface
-                        coords={this.state.coords}
-                        toggle_coords={() => this.setState({ coords: !this.state.coords })}
-                        fog={this.state.fog}
-                        toggle_fog={() => this.setState({ fog: !this.state.fog })}
-                    />
-                </Row>
+                <Interface
+                    coords={this.state.coords}
+                    toggle_coords={() => this.setState({ coords: !this.state.coords })}
+                    fog={this.state.fog}
+                    toggle_fog={() => this.setState({ fog: !this.state.fog })}
+                    thinking={this.state.turn !== this.props.controls}
+                />
             </Container>
         )
     }
