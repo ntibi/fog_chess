@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] dev the move engine
+- [ ] optimize the move engine (make the pieces array immutable to avoid deep copying in moves generation)
 
 
 - [ ] when you drop a piece to put it back, the hints should still render
