@@ -21,13 +21,15 @@ let nodes = 0
 
 function evaluate(pieces, player) {
     nodes++
-    const allies = pieces.filter(piece => piece.color === player)
-    const enemies = pieces.filter(piece => piece.color !== player)
+    let score = 0
 
-    const positive = allies.map(piece => value[piece.type]).reduce((acc, v) => acc + v, 0)
-    const negative = enemies.map(piece => value[piece.type]).reduce((acc, v) => acc + v, 0)
-
-    return positive - negative + shannon_mobility(pieces, player)
+    for (let piece of pieces) {
+        if (piece.color === player)
+            score += value[piece.type]
+        else
+            score -= value[piece.type]
+    }
+    return score + shannon_mobility(pieces, player)
 }
 
 function best_move(pieces, player, depth) {
