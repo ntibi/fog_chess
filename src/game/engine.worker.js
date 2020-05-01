@@ -13,9 +13,14 @@ const value = {
     p: 1,
 }
 
+function shannon_mobility(pieces, player) {
+    // TODO https://www.chessprogramming.org/Evaluation add pawn evaluation
+    return pieces.reduce((acc, piece) => acc + piece.moves.length * (piece.color === player ? 0.1 : -0.1), 0)
+}
+
 let nodes = 0
 
-function evaluate(pieces, player) { // TODO handle victory condition
+function evaluate(pieces, player) {
     nodes++
     const allies = pieces.filter(piece => piece.color === player)
     const enemies = pieces.filter(piece => piece.color !== player)
@@ -23,7 +28,7 @@ function evaluate(pieces, player) { // TODO handle victory condition
     const positive = allies.map(piece => value[piece.type]).reduce((acc, v) => acc + v, 0)
     const negative = enemies.map(piece => value[piece.type]).reduce((acc, v) => acc + v, 0)
 
-    return positive - negative
+    return positive - negative + shannon_mobility(pieces, player)
 }
 
 function best_move(pieces, player, depth) {
@@ -74,8 +79,6 @@ onmessage = ({data: {turn, pieces}}) => {
 
     const player = turn
     pieces = cloneDeep(pieces)
-    const allies = pieces.filter(piece => piece.color === player)
-    const enemies = pieces.filter(piece => piece.color !== player)
     const initial = evaluate(pieces, player)
 
     const { move, value } = best_move(pieces, player, 2)
