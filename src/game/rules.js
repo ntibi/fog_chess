@@ -26,10 +26,10 @@ export const promote_rank = [0, 7]
 export const king = "k"
 
 export function apply_move(src, dst, pieces) {
+    const ate = pieces.find(p => same_coords(p.coords, dst))
     pieces = pieces.filter(p => !same_coords(p.coords, dst))
 
     const index = pieces.findIndex(p => same_coords(p.coords, src))
-    const ate = pieces.find(p => same_coords(p.coords, dst))
     let winner
 
     let piece = {
