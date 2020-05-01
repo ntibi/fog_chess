@@ -26,13 +26,17 @@ export const promote_rank = [0, 7]
 export const king = "k"
 
 export function apply_move(src, dst, pieces) {
-    const piece = pieces.find(p => same_coords(p.coords, src))
+    pieces = pieces.filter(p => !same_coords(p.coords, dst))
+
+    const index = pieces.findIndex(p => same_coords(p.coords, src))
     const ate = pieces.find(p => same_coords(p.coords, dst))
     let winner
 
-    pieces = pieces.filter(p => !same_coords(p.coords, dst))
-    piece.coords = dst
-    piece.moved = true
+    let piece = {
+        ...pieces[index],
+        coords: dst,
+        moved: true,
+    }
     if (promotable.includes(piece.type) && promote_rank.includes(piece.coords.y)) {
         piece.type = promote_to
         piece.promoted = true
@@ -40,6 +44,7 @@ export function apply_move(src, dst, pieces) {
     if (ate && ate.type === king) {
         winner = other_color(ate.color)
     }
+    pieces[index] = piece
     return {
         pieces,
         turn: other_color(piece.color),

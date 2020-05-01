@@ -1,4 +1,3 @@
-import cloneDeep from "lodash/cloneDeep"
 import { moves } from "./moves"
 import { apply_move, other_color } from "./rules"
 
@@ -44,8 +43,7 @@ function best_move(pieces, player, depth) {
 
     for (let piece of pieces.filter(piece => piece.color === player)) {
         for (let move of piece.moves) {
-            // TODO apply_move doit pas modifier les pieces sinon ca casse tout (et les cloneDeep ca consomme)
-            let { pieces: new_pieces } = apply_move(piece.coords, move, cloneDeep(pieces))
+            let { pieces: new_pieces } = apply_move(piece.coords, move, pieces)
             new_pieces = new_pieces.map(p => ({
                 ...p,
                 moves: moves(p, new_pieces)
@@ -78,10 +76,9 @@ onmessage = ({data: {turn, pieces}}) => {
     const t0 = performance.now()
 
     const player = turn
-    pieces = cloneDeep(pieces)
     const initial = evaluate(pieces, player)
 
-    const { move, value } = best_move(pieces, player, 2)
+    const { move, value } = best_move(pieces, player, 3)
     console.log(JSON.stringify(move, null, 4))
 
     const t1 = performance.now()
