@@ -9,6 +9,10 @@ export const { minx, miny, maxx, maxy } = {
 
 export const colors = ["w", "b"]
 
+export const pieces = ["p", "n", "b", "r", "q", "k"]
+
+export const all_pieces = pieces.map(p => colors.map(c => `${p}${c}`)).flat()
+
 export const first_color = colors[0]
 
 export const other_color = (color) => colors[(colors.indexOf(color) + 1) % colors.length]
@@ -25,12 +29,21 @@ export const promote_rank = [0, 7]
 
 export const king = "k"
 
+export function winner(pieces) {
+    const kings = pieces.filter(p => p.type === king)
+    if (kings.length === 1) {
+        return other_color(kings[0].color)
+    } else if (kings.length === 0) {
+        throw "wtf no kings ?"
+    }
+    return
+}
+
 export function apply_move(src, dst, pieces) {
     const ate = pieces.find(p => same_coords(p.coords, dst))
     pieces = pieces.filter(p => !same_coords(p.coords, dst))
 
     const index = pieces.findIndex(p => same_coords(p.coords, src))
-    let winner
 
     let piece = {
         ...pieces[index],
@@ -41,14 +54,11 @@ export function apply_move(src, dst, pieces) {
         piece.type = promote_to
         piece.promoted = true
     }
-    if (ate && ate.type === king) {
-        winner = other_color(ate.color)
-    }
     pieces[index] = piece
     return {
         pieces,
         turn: other_color(piece.color),
         ate,
-        winner,
+        winner: winner(pieces),
     }
 }

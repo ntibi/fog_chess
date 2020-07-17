@@ -3,6 +3,9 @@
 - [ ] add position evaluation pondering
 
 
+- [ ] use zobrist hashing for transposition
+
+
 - [ ] when you drop a piece to put it back, the hints should still render
 
 
