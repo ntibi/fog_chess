@@ -25,7 +25,7 @@ export default class Tile extends Component {
             transform: `translate(${coords.x * tileSize}px, ${coords.y * tileSize}px)`,
         };
 
-        const size = tileSize / 2.6;
+        const size = tileSize / 3;
         const hint_style = {
             width: `${size}px`,
             height: `${size}px`,
