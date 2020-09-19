@@ -23,10 +23,18 @@ export function compute_visible(allies) {
             }, {
                 x: piece.coords.x - 1,
                 y: piece.coords.y + ydir,
+            }, {
+                x: piece.coords.x,
+                y: piece.coords.y + ydir,
             }]
-                .filter(move => is_on_board(move))
-                .filter(move => !is_visible(visible, move))
+                .filter(is_on_board)
             )
+            if (!piece.moved) {
+                visible.push([{
+                    x: piece.coords.x,
+                    y: piece.coords.y + ydir,
+                }].filter(is_on_board))
+            }
         }
         piece.moves
             .forEach(move => !is_visible(visible, move) && visible.push(move))
