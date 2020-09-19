@@ -1,4 +1,8 @@
-# TODO
+# [FOG CHESS](https://ntibi.github.io/fog_chess/)
+
+chess variant with imperfect information known as [dark chess](https://en.wikipedia.org/wiki/Dark_chess) or [kriegspiel](https://en.wikipedia.org/wiki/Kriegspiel_(chess))
+
+## TODO
 
 - [ ] add position evaluation pondering
 
