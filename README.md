@@ -25,3 +25,9 @@
 
 
 - [ ] the pieces seem ~1px off from the tile center
+
+
+- [ ] refactor w/ hooks
+
+
+- [ ] split Board.js to avoid full re-render
