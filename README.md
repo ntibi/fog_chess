@@ -35,3 +35,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] split Board.js to avoid full re-render
+
+
+- [ ] limit bundle size (check out lazy load)
