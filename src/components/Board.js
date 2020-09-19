@@ -113,7 +113,7 @@ export default class Board extends Component {
     resize() {
         this.setState({
             tileSize: Math.floor((Math.min(window.innerWidth, window.innerHeight) / 10)),
-        }) 
+        })
     }
 
     componentDidMount() {
@@ -231,13 +231,15 @@ export default class Board extends Component {
                         {pieces_to_render}
                     </div>
                 </Row>
-                <Interface
-                    coords={this.state.coords}
-                    toggle_coords={() => this.setState({ coords: !this.state.coords })}
-                    fog={this.state.fog}
-                    toggle_fog={() => this.setState({ fog: !this.state.fog })}
-                    thinking={this.state.turn !== this.props.controls}
-                />
+                <Row>
+                    <Interface
+                        coords={this.state.coords}
+                        toggle_coords={() => this.setState({ coords: !this.state.coords })}
+                        fog={this.state.fog}
+                        toggle_fog={() => this.setState({ fog: !this.state.fog })}
+                        thinking={this.state.turn !== this.props.controls}
+                    />
+                </Row>
             </Container>
         )
     }

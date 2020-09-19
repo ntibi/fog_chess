@@ -1,28 +1,19 @@
 import React, { Component } from 'react';
-import { Row, Col, Button, Spinner } from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import "./Interface.css"
 
-export default class Interface extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
-
-    render() {
-            return (
-                <>
-                    <Row className="m-1">
-                        <Col className="border">
-                            <Button className="m-1" onClick={this.props.toggle_coords} active={this.props.coords} variant="secondary">coords</Button>
-                            <Button className="m-1" onClick={this.props.toggle_fog} active={this.props.fog} variant="secondary">fog</Button>
-                        </Col>
-                    </Row>
-                    <Row className="m-1">
-                        <Col className="border info">
-                            computer <Spinner className={this.props.thinking ? "visible" : "invisible"} size="sm" animation="border" />
-                        </Col>
-                    </Row>
-                </>
-            )
-    }
+export default function Interface(props) {
+    return (
+        <ListGroup>
+            <ListGroup.Item>
+                computer <Spinner className={props.thinking ? "visible" : "invisible"} size="sm" animation="border" />
+            </ListGroup.Item>
+            <ListGroup.Item>
+                <Button className="m-1" onClick={props.toggle_coords} active={props.coords} variant="secondary">coords</Button>
+                <Button className="m-1" onClick={props.toggle_fog} active={props.fog} variant="secondary">fog</Button>
+            </ListGroup.Item>
+        </ListGroup>
+    )
 }
