@@ -38,3 +38,9 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] limit bundle size (check out lazy load)
+
+
+- [ ] iterative deepening or breadth first
+
+
+- [ ] moves ordering in min_max
