@@ -17,10 +17,7 @@ function shannon_mobility(pieces, player) {
     return pieces.reduce((acc, piece) => acc + piece.moves.length * (piece.color === player ? 0.1 : -0.1), 0)
 }
 
-let nodes = 0
-
 function evaluate(pieces, player) {
-    nodes++
     let score = 0
 
     for (let piece of pieces) {
@@ -32,51 +29,63 @@ function evaluate(pieces, player) {
     return score + shannon_mobility(pieces, player)
 }
 
+let nodes = 0
+
 function min_max(pieces, player, depth, { alpha, beta }) {
-    if (!depth)
+    if (!depth) {
+        nodes++
         return {
             value: evaluate(pieces, player)
         }
+    }
 
     let best = {
         move: {},
         value: -Infinity,
     }
 
+    const available_moves = []
     for (let piece of pieces.filter(piece => piece.color === player)) {
         for (let move of piece.moves) {
-            let { pieces: new_pieces, winner } = apply_move(piece.coords, move, pieces)
-            new_pieces = new_pieces.map(p => ({
-                ...p,
-                moves: moves(p, new_pieces)
-            }))
-            let value, next
-            if (!winner) {
-                let mm = min_max(new_pieces, other_color(player), depth - 1, { alpha: -beta, beta: -alpha })
-                value = -mm.value
-                next = mm.move
-            } else {
-                value = winner === player ? Infinity : -Infinity
-            }
-            if (value > best.value) {
-                best = {
-                    move: {
-                        src: piece.coords,
-                        dst: move,
-                        next: {
-                            depth: depth - 1,
-                            color: other_color(player),
-                            value: value,
-                            move: next,
-                        },
-                    },
-                    value,
-                }
-            }
-            alpha = Math.max(alpha, best.value)
-            if (alpha >= beta)
-                break;
+            const applied = apply_move(piece.coords, move, pieces)
+            available_moves.push([piece, move, applied, evaluate(applied.pieces, player)])
         }
+    }
+
+    available_moves.sort(([p1, m1, a1, e1], [p2, m2, a2, e2]) => e2 - e1 )
+
+    for (let [piece, move, applied] of available_moves) {
+        let { pieces: new_pieces, winner } = applied
+        new_pieces = new_pieces.map(p => ({
+            ...p,
+            moves: moves(p, new_pieces)
+        }))
+        let value, next
+        if (!winner) {
+            let mm = min_max(new_pieces, other_color(player), depth - 1, { alpha: -beta, beta: -alpha })
+            value = -mm.value
+            next = mm.move
+        } else {
+            value = winner === player ? Infinity : -Infinity
+        }
+        if (value > best.value) {
+            best = {
+                move: {
+                    src: piece.coords,
+                    dst: move,
+                    next: {
+                        depth: depth - 1,
+                        color: other_color(player),
+                        value: value,
+                        move: next,
+                    },
+                },
+                value,
+            }
+        }
+        alpha = Math.max(alpha, best.value)
+        if (alpha >= beta)
+            break;
     }
 
     return best 
