@@ -30,9 +30,9 @@ export function compute_visible(allies) {
                 .filter(is_on_board)
             )
             if (!piece.moved) {
-                visible.push([{
+                visible.push(...[{
                     x: piece.coords.x,
-                    y: piece.coords.y + ydir,
+                    y: piece.coords.y + 2 * ydir,
                 }].filter(is_on_board))
             }
         }
