@@ -32,7 +32,7 @@ function evaluate(pieces, player) {
     return score + shannon_mobility(pieces, player)
 }
 
-function min_max(pieces, player, depth) {
+function min_max(pieces, player, depth, { alpha, beta }) {
     if (!depth)
         return {
             value: evaluate(pieces, player)
@@ -52,7 +52,7 @@ function min_max(pieces, player, depth) {
             }))
             let value, next
             if (!winner) {
-                let mm = min_max(new_pieces, other_color(player), depth - 1)
+                let mm = min_max(new_pieces, other_color(player), depth - 1, { alpha: -beta, beta: -alpha })
                 value = -mm.value
                 next = mm.move
             } else {
@@ -73,6 +73,9 @@ function min_max(pieces, player, depth) {
                     value,
                 }
             }
+            alpha = Math.max(alpha, best.value)
+            if (alpha >= beta)
+                break;
         }
     }
 
@@ -80,7 +83,7 @@ function min_max(pieces, player, depth) {
 }
 
 function best_move(pieces, player) {
-    return min_max(pieces, player, 3)
+    return min_max(pieces, player, 3, { alpha: -Infinity, beta: Infinity })
 }
 
 onmessage = ({data: {turn, pieces}}) => {
