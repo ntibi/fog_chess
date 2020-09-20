@@ -11,6 +11,7 @@ import { get_move } from "../game/engine"
 import { compute_visible, fog_strength, is_visible } from "../game/fog"
 import Interface from "./interface/Interface"
 import { Container, Row, Col } from 'react-bootstrap';
+import GhostPiece from './GhostPiece';
 
 export default class Board extends Component {
     constructor(props) {
@@ -23,6 +24,7 @@ export default class Board extends Component {
             over: false,
             coords: false,
             fog: true,
+            last_seen: null,
         }
         this.move = this.move.bind(this)
         this.select = this.select.bind(this)
@@ -80,7 +82,18 @@ export default class Board extends Component {
                 return this.game_over({ winner })
             if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
+                this.set_last_seen(src, dst)
                 this.move(src, dst)
+            }
+        })
+    }
+
+    set_last_seen(src, dst) {
+        this.setState({
+            last_seen: {
+                src,
+                dst,
+                piece: this.state.pieces.find(p => same_coords(p.coords, src)),
             }
         })
     }
@@ -108,6 +121,7 @@ export default class Board extends Component {
             selected: {},
             over: false,
             coords: false,
+            last_seen: null,
         })
     }
 
@@ -208,6 +222,17 @@ export default class Board extends Component {
             />
         )
 
+        let ghost_piece = null
+        if (this.state.last_seen
+            && visible_tiles.some(t => same_coords(t, this.state.last_seen.src))
+            && !visible_tiles.some(t => same_coords(t, this.state.last_seen.dst)))
+        ghost_piece = <GhostPiece
+                type={this.state.last_seen.piece.type}
+                color={this.state.last_seen.piece.color}
+                tileSize={tileSize}
+                coords={this.state.last_seen.src}
+         />
+
         return (
             <Container fluid style={{ width: tileSize * 8 }}>
                 <Row>
@@ -230,6 +255,7 @@ export default class Board extends Component {
 
                         {tiles}
                         {pieces_to_render}
+                        {ghost_piece}
                     </div>
                 </Row>
                 <Row>
