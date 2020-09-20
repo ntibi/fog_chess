@@ -7,7 +7,7 @@ export const no_collision = (move, pieces) => !pieces.some(piece => same_coords(
 export const collision = (move, pieces) => pieces.some(piece => same_coords(piece.coords, move))
 export const apply = (coords, dir) => ({ x: coords.x + dir.x, y: coords.y + dir.y })
 
-function straight_move (piece, dir, allies, enemies) {
+function straight_move(piece, dir, allies, enemies) {
     const out = []
     let move = { ...piece.coords }
     while(true)
