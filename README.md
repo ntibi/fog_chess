@@ -44,3 +44,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] moves ordering in min_max
+
+
+- [ ] cache moves and benchmark perf (LRU ?)
