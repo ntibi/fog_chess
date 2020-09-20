@@ -107,6 +107,7 @@ export default class Board extends Component {
             turn: first_color,
             selected: {},
             over: false,
+            coords: false,
         })
     }
 
