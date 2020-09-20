@@ -77,6 +77,7 @@ export default class Board extends Component {
             pieces,
             turn,
             selected: {},
+            last_seen: null,
         }, async () => {
             if (winner)
                 return this.game_over({ winner })
