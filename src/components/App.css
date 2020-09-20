@@ -1,0 +1,12 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
+}
+
+.source {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 10px;
+}
