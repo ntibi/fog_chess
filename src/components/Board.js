@@ -59,6 +59,11 @@ export default class Board extends Component {
     }
 
     move(src, dst) {
+        if  (this.state.turn === this.props.controls) {
+            this.setState({
+                last_seen: null
+            })
+        }
         let {
             pieces,
             turn,
@@ -77,7 +82,6 @@ export default class Board extends Component {
             pieces,
             turn,
             selected: {},
-            last_seen: null,
         }, async () => {
             if (winner)
                 return this.game_over({ winner })
