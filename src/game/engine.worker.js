@@ -56,7 +56,7 @@ function min_max(pieces, player, depth) {
                 value = -mm.value
                 next = mm.move
             } else {
-                value = winner === player ? Math.Infinity : -Math.Infinity
+                value = winner === player ? Infinity : -Infinity
             }
             if (value > best.value) {
                 best = {

@@ -32,7 +32,7 @@ export const king = "k"
 export function winner(pieces) {
     const kings = pieces.filter(p => p.type === king)
     if (kings.length === 1) {
-        return other_color(kings[0].color)
+        return kings[0].color
     } else if (kings.length === 0) {
         throw "wtf no kings ?"
     }
