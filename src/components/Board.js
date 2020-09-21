@@ -5,7 +5,7 @@ import Over from "./Over"
 import "./Board.css"
 import setup from "../game/setup"
 import { moves, same_coords } from "../game/moves"
-import { first_color, apply_move, maxx, maxy } from "../game/rules"
+import { first_color, apply_move, maxx, maxy, other_color } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
 import { compute_visible, fog_strength, is_visible } from "../game/fog"
@@ -87,7 +87,9 @@ export default class Board extends Component {
                 return this.game_over({ winner })
             if (this.state.turn !== this.props.controls) {
                 const { src, dst } = await get_move(pieces, turn)
-                this.set_last_seen(src, dst)
+                if (!src)
+                    return this.game_over({ winner: other_color(turn) })
+                this.set_last_seen()
                 this.move(src, dst)
             }
         })
