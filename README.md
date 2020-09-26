@@ -4,6 +4,9 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 ## TODO
 
+- [ ] fix castling (queenside casling is broken + castling goes through pieces)
+
+
 - [ ] add position evaluation pondering
 
 
