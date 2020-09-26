@@ -54,6 +54,16 @@ export function apply_move(src, dst, pieces) {
         piece.type = promote_to
         piece.promoted = true
     }
+
+    if (piece.type === "k" && Math.abs(src.x - dst.x) > 1) {
+        const rook = pieces.find(p => p.type === "r" && Math.sign(src.x - dst.x) === Math.sign(src.x - p.coords.x))
+        rook.moved = true,
+        rook.coords = {
+            x: src.x - Math.sign(src.x - rook.coords.x),
+            y: src.y,
+        }
+    }
+
     pieces[index] = piece
     return {
         pieces,

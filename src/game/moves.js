@@ -24,6 +24,20 @@ function straight_move(piece, dir, allies, enemies) {
     }
 }
 
+function castle(piece, allies) {
+    const out = []
+
+    if (!piece.moved) {
+        allies.filter(x => x.type === "r").forEach(rook => {
+            if (!rook.moved) {
+                const dir = Math.sign(piece.coords.x - rook.coords.x)
+                out.push(apply(piece.coords, { x: 2 * dir, y: 0 }))
+            }
+        })
+    }
+    return out
+}
+
 const movers = {
     k: (piece, allies) => [
         apply(piece.coords, { x: -1, y: -1 }),
@@ -34,6 +48,7 @@ const movers = {
         apply(piece.coords, { x: -1, y: 1 }),
         apply(piece.coords, { x: 0, y: 1 }),
         apply(piece.coords, { x: 1, y: 1 }),
+        ...castle(piece, allies),
     ]
     .filter(move => is_on_board(move))
     .filter(move => no_collision(move, allies))
