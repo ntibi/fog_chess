@@ -101,8 +101,7 @@ export default class Piece extends Component {
             case 0: // left click
                 if (this.props.ally) {
                     e.stopPropagation()
-                    if (!this.props.selected)
-                        this.props.select(this.props.coords)
+                    this.props.select(this.props.coords)
                 }
                 break;
             case 2: // right click
