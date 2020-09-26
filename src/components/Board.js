@@ -24,7 +24,8 @@ export default class Board extends Component {
             over: false,
             coords: false,
             fog: true,
-            last_seen: null,
+            visible_tiles: [],
+            ghosts: [],
         }
         this.move = this.move.bind(this)
         this.select = this.select.bind(this)
@@ -33,6 +34,7 @@ export default class Board extends Component {
         this.origin = React.createRef()
 
         this.history = []
+        this.ghost_pieces = []
     }
 
     restart() {
@@ -47,7 +49,7 @@ export default class Board extends Component {
         })
     }
 
-    last_moves(n) {
+    get_history(n) {
         return this.history.slice(this.history.length - n)
     }
 
@@ -58,30 +60,41 @@ export default class Board extends Component {
         }))
     }
 
+    get_visibilty(pieces) {
+        const allies = pieces.filter(piece => piece.color === this.props.controls)
+
+        const visible_tiles = compute_visible(allies)
+        return visible_tiles
+    }
+
     move(src, dst) {
-        if  (this.state.turn === this.props.controls) {
-            this.setState({
-                last_seen: null
-            })
-        }
         let {
             pieces,
             turn,
             ate,
             winner,
         } = apply_move(src, dst, this.state.pieces)
+        pieces = this.add_moves(pieces)
+        const visible_tiles = this.get_visibilty(pieces)
+
+        if (this.state.turn === this.props.controls) {
+            this.compute_ghosts(this.state.turn, pieces, visible_tiles)
+        }
+
         this.history.push({
             move: {
                 src,
                 dst,
             },
             ate,
+            pieces: this.state.pieces,
+            visible_tiles: this.state.visible_tiles,
         })
-        pieces = this.add_moves(pieces)
         this.setState({
             pieces,
             turn,
             selected: {},
+            visible_tiles,
         }, async () => {
             if (winner)
                 return this.game_over({ winner })
@@ -89,20 +102,22 @@ export default class Board extends Component {
                 const { src, dst } = await get_move(pieces, turn)
                 if (!src)
                     return this.game_over({ winner: other_color(turn) })
-                this.set_last_seen()
                 this.move(src, dst)
             }
         })
     }
 
-    set_last_seen(src, dst) {
-        this.setState({
-            last_seen: {
-                src,
-                dst,
-                piece: this.state.pieces.find(p => same_coords(p.coords, src)),
-            }
-        })
+    compute_ghosts(turn, pieces, visible_tiles) {
+        this.ghost_pieces = []
+
+        if (pieces && visible_tiles) {
+            visible_tiles.forEach(tile => {
+                const piece = pieces.find(p => same_coords(p.coords, tile))
+                if (piece && piece.color !== turn) {
+                    this.ghost_pieces.push(piece)
+                }
+            })
+        }
     }
 
     get_default_pieces() {
@@ -121,6 +136,7 @@ export default class Board extends Component {
     reset_game() {
         let pieces = this.get_default_pieces()
         pieces = this.add_moves(pieces)
+        const visible_tiles = this.get_visibilty(pieces)
         this.setState({
             pieces,
             over: false,
@@ -128,8 +144,10 @@ export default class Board extends Component {
             selected: {},
             over: false,
             coords: false,
-            last_seen: null,
+            visible_tiles,
         })
+        this.history = []
+        this.ghost_pieces = []
     }
 
     resize() {
@@ -177,21 +195,13 @@ export default class Board extends Component {
     render() {
         const { tileSize, pieces } = this.state
 
-        const allies = pieces.filter(piece => piece.color === this.props.controls)
-
-        const visible_tiles = compute_visible(allies)
-        this.last_moves(1).forEach(last => {
-            if (last.ate && !is_visible(visible_tiles, last.move.dst))
-                visible_tiles.push(last.move.dst)
-        })
-
         const tiles = [];
 
         [...Array(maxy + 1).keys()].forEach(y => {
             [...Array(maxx + 1).keys()].forEach(x => {
                 const coords = { x, y }
-                const visible = visible_tiles.find(t => same_coords(t, { x, y }))
-                let highlighted = visible ? this.last_moves(1).some(m => same_coords(m.move.dst, { x, y })) : false
+                const visible = this.state.visible_tiles.find(t => same_coords(t, { x, y }))
+                let highlighted = visible ? this.get_history(1).some(({ move }) => same_coords(move.dst, { x, y })) : false
                 if (same_coords(this.state.selected, { x, y }))
                     highlighted = true
                 tiles.push(
@@ -201,7 +211,7 @@ export default class Board extends Component {
                         tileSize={tileSize}
                         color={!((x + y) % 2) ? "light" : "dark"}
                         visible={!this.state.fog || visible}
-                        fog_strength={fog_strength(coords, visible_tiles)}
+                        fog_strength={fog_strength(coords, this.state.visible_tiles)}
                         highlighted={highlighted}
                         visible_coords={this.state.coords}
                     />
@@ -211,7 +221,7 @@ export default class Board extends Component {
 
 
 
-        const pieces_to_render = (!this.state.fog ? pieces : pieces.filter(piece => visible_tiles.find(c => same_coords(piece.coords, c)))).map(piece =>
+        const pieces_to_render = (!this.state.fog ? pieces : pieces.filter(piece => this.state.visible_tiles.find(c => same_coords(piece.coords, c)))).map(piece =>
             <Piece
                 key={piece.id}
                 type={piece.type}
@@ -228,17 +238,6 @@ export default class Board extends Component {
                 origin={this.origin}
             />
         )
-
-        let ghost_piece = null
-        if (this.state.last_seen
-            && visible_tiles.some(t => same_coords(t, this.state.last_seen.src))
-            && !visible_tiles.some(t => same_coords(t, this.state.last_seen.dst)))
-        ghost_piece = <GhostPiece
-                type={this.state.last_seen.piece.type}
-                color={this.state.last_seen.piece.color}
-                tileSize={tileSize}
-                coords={this.state.last_seen.src}
-         />
 
         return (
             <Container fluid style={{ width: tileSize * 8 }}>
@@ -262,7 +261,13 @@ export default class Board extends Component {
 
                         {tiles}
                         {pieces_to_render}
-                        {ghost_piece}
+                        {this.ghost_pieces.map(x => <GhostPiece
+                            type={x.type}
+                            color={x.color}
+                            tileSize={tileSize}
+                            coords={x.coords}
+                            key={x.id}
+                        />)}
                     </div>
                 </Row>
                 <Row>

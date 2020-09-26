@@ -8,6 +8,7 @@ function GhostPiece(props) {
         width: `${tileSize}px`,
         height: `${tileSize}px`,
         transform: `translate(${coords.x * tileSize}px, ${coords.y * tileSize}px)`,
+        position: "absolute",
         opacity: 0.2,
     }
 

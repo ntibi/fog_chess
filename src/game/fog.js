@@ -13,8 +13,7 @@ export function compute_visible(allies) {
     //     return visible
 
     allies.forEach(piece => {
-        if (!is_visible(visible, piece.coords))
-            visible.push(piece.coords)
+        visible.push(piece.coords)
         if (piece.type === "p") {
             const ydir = pawn_dir[piece.color];
             visible.push(...[{
@@ -36,10 +35,10 @@ export function compute_visible(allies) {
                 }].filter(is_on_board))
             }
         }
-        piece.moves
-            .forEach(move => !is_visible(visible, move) && visible.push(move))
+        visible.push(...piece.moves)
     })
-    return visible
+
+    return visible.filter((v, i) => visible.findIndex(x => same_coords(v, x)) === i)
 }
 
 const filter = []
