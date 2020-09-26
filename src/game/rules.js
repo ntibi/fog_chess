@@ -56,12 +56,18 @@ export function apply_move(src, dst, pieces) {
     }
 
     if (piece.type === "k" && Math.abs(src.x - dst.x) > 1) {
-        const rook = pieces.find(p => p.type === "r" && Math.sign(src.x - dst.x) === Math.sign(src.x - p.coords.x))
-        rook.moved = true,
-        rook.coords = {
-            x: src.x - Math.sign(src.x - rook.coords.x),
-            y: src.y,
+        const index = pieces.findIndex(p => p.type === "r" && p.color === piece.color && Math.sign(src.x - dst.x) === Math.sign(src.x - p.coords.x))
+        const castlingRook = pieces[index]
+
+        const rook = {
+            ...castlingRook,
+            moved: true,
+            coords: {
+                x: src.x - Math.sign(src.x - castlingRook.coords.x),
+                y: src.y,
+            }
         }
+        pieces[index] = rook
     }
 
     pieces[index] = piece
