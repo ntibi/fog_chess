@@ -77,8 +77,10 @@ export default class Board extends Component {
         pieces = this.add_moves(pieces)
         const visible_tiles = this.get_visibilty(pieces)
 
-        if (this.state.turn === this.props.controls) {
-            this.compute_ghosts(this.state.turn, pieces, visible_tiles)
+        if (turn === this.props.controls) {
+            if (ate)
+                visible_tiles.push(dst)
+            this.compute_ghosts(turn, { pieces, visible_tiles })
         }
 
         this.history.push({
@@ -87,8 +89,8 @@ export default class Board extends Component {
                 dst,
             },
             ate,
-            pieces: this.state.pieces,
-            visible_tiles: this.state.visible_tiles,
+            pieces: pieces,
+            visible_tiles: visible_tiles,
         })
         this.setState({
             pieces,
@@ -107,13 +109,15 @@ export default class Board extends Component {
         })
     }
 
-    compute_ghosts(turn, pieces, visible_tiles) {
+    compute_ghosts(turn, now) {
         this.ghost_pieces = []
 
-        if (pieces && visible_tiles) {
-            visible_tiles.forEach(tile => {
-                const piece = pieces.find(p => same_coords(p.coords, tile))
-                if (piece && piece.color !== turn) {
+        const [prev] = this.get_history(1)
+
+        if (prev) {
+            prev.visible_tiles.forEach(tile => {
+                const piece = prev.pieces.find(p => same_coords(p.coords, tile))
+                if (piece && piece.color !== turn && !is_visible(now.visible_tiles, now.pieces.find(x => x.id === piece.id).coords)) {
                     this.ghost_pieces.push(piece)
                 }
             })
