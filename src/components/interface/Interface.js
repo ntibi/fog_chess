@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import "./Interface.css"
 
 export default function Interface(props) {
-    console.log(props.level)
     return (
         <div className="interface">
             <div className="group">
