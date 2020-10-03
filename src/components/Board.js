@@ -10,7 +10,6 @@ import newId from "../utils/newId"
 import { get_move } from "../game/engine"
 import { compute_visible, fog_strength, is_visible } from "../game/fog"
 import Interface from "./interface/Interface"
-import { Container, Row, Col } from 'react-bootstrap';
 import GhostPiece from './GhostPiece';
 
 export default class Board extends Component {
@@ -244,46 +243,42 @@ export default class Board extends Component {
         )
 
         return (
-            <Container fluid style={{ width: tileSize * 8 }}>
-                <Row>
-                    <div
-                        className="board"
-                        style={{
-                            width: `${tileSize * 8}px`,
-                            height: `${tileSize * 8}px`,
-                        }}
-                        onMouseDown={this.mouse_down}
-                        onContextMenu={this.cancel}
-                        ref={this.origin}
-                    >
-                        {this.state.over &&
-                            <Over
-                                winner={this.state.over.winner}
-                                won={this.state.over.winner === this.props.controls}
-                                restart={this.restart}
-                            />}
+            <div>
+                <div
+                    className="board"
+                    style={{
+                        width: `${tileSize * 8}px`,
+                        height: `${tileSize * 8}px`,
+                    }}
+                    onMouseDown={this.mouse_down}
+                    onContextMenu={this.cancel}
+                    ref={this.origin}
+                >
+                    {this.state.over &&
+                        <Over
+                            winner={this.state.over.winner}
+                            won={this.state.over.winner === this.props.controls}
+                            restart={this.restart}
+                        />}
 
-                        {tiles}
-                        {pieces_to_render}
-                        {this.ghost_pieces.map(x => <GhostPiece
-                            type={x.type}
-                            color={x.color}
-                            tileSize={tileSize}
-                            coords={x.coords}
-                            key={x.id}
-                        />)}
-                    </div>
-                </Row>
-                <Row>
-                    <Interface
-                        coords={this.state.coords}
-                        toggle_coords={() => this.setState({ coords: !this.state.coords })}
-                        fog={this.state.fog}
-                        toggle_fog={() => this.setState({ fog: !this.state.fog })}
-                        thinking={this.state.turn !== this.props.controls}
-                    />
-                </Row>
-            </Container>
+                    {tiles}
+                    {pieces_to_render}
+                    {this.ghost_pieces.map(x => <GhostPiece
+                        type={x.type}
+                        color={x.color}
+                        tileSize={tileSize}
+                        coords={x.coords}
+                        key={x.id}
+                    />)}
+                </div>
+                <Interface
+                    coords={this.state.coords}
+                    toggle_coords={() => this.setState({ coords: !this.state.coords })}
+                    fog={this.state.fog}
+                    toggle_fog={() => this.setState({ fog: !this.state.fog })}
+                    thinking={this.state.turn !== this.props.controls}
+                />
+            </div>
         )
     }
 }
