@@ -10,8 +10,8 @@ export default function Interface(props) {
                 <div className={`spinner ${props.thinking && "spinning"}`}></div>
             </div>
             <div className="group">
-                <button className={`control-button ${props.coords ? "checked" : "unchecked"}`} onClick={props.toggle_coords} active={props.coords}>coords</button>
-                <button className={`control-button ${props.fog ? "checked" : "unchecked"}`} onClick={props.toggle_fog} active={props.fog}>fog</button>
+                <button className={`control-button ${props.coords ? "checked" : "unchecked"}`} onClick={props.toggle_coords}>coords</button>
+                <button className={`control-button ${props.fog ? "checked" : "unchecked"}`} onClick={props.toggle_fog}>fog</button>
             </div>
         </div>
     )
