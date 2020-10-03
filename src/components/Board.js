@@ -25,11 +25,17 @@ export default class Board extends Component {
             fog: true,
             visible_tiles: [],
             ghosts: [],
+            level: {
+                min: 1,
+                max: 5,
+                current: 3,
+            }
         }
         this.move = this.move.bind(this)
         this.select = this.select.bind(this)
         this.mouse_down = this.mouse_down.bind(this)
         this.restart = this.restart.bind(this)
+        this.set_level = this.set_level.bind(this)
         this.origin = React.createRef()
 
         this.history = []
@@ -44,6 +50,15 @@ export default class Board extends Component {
         this.setState({
             over: {
                 winner,
+            }
+        })
+    }
+
+    set_level(v) {
+        this.setState({
+            level: {
+                ...this.state.level,
+                current: v,
             }
         })
     }
@@ -100,7 +115,7 @@ export default class Board extends Component {
             if (winner)
                 return this.game_over({ winner })
             if (this.state.turn !== this.props.controls) {
-                const { src, dst } = await get_move(pieces, turn)
+                const { src, dst } = await get_move(pieces, turn, this.state.level.current)
                 if (!src)
                     return this.game_over({ winner: other_color(turn) })
                 this.move(src, dst)
@@ -277,6 +292,8 @@ export default class Board extends Component {
                     fog={this.state.fog}
                     toggle_fog={() => this.setState({ fog: !this.state.fog })}
                     thinking={this.state.turn !== this.props.controls}
+                    level={this.state.level}
+                    set_level={this.set_level}
                 />
             </div>
         )

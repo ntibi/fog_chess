@@ -5,6 +5,13 @@ html, body {
     background-color: #d5d5d5;
 }
 
+#app {
+    margin: auto;
+    width: 80vw;
+    justify-content: center;
+    align-items: center;
+}
+
 .source {
     position: absolute;
     right: 0px;

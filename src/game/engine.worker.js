@@ -91,18 +91,18 @@ function min_max(pieces, player, depth, { alpha, beta }) {
     return best 
 }
 
-function best_move(pieces, player) {
-    return min_max(pieces, player, 3, { alpha: -Infinity, beta: Infinity })
+function best_move(pieces, player, level) {
+    return min_max(pieces, player, level, { alpha: -Infinity, beta: Infinity })
 }
 
-onmessage = ({data: {turn, pieces}}) => {
+onmessage = ({data: {turn, pieces, level}}) => {
     nodes = 0
     const t0 = performance.now()
 
     const player = turn
     const initial = evaluate(pieces, player)
 
-    const { move, value } = best_move(pieces, player)
+    const { move, value } = best_move(pieces, player, level)
 
     const t1 = performance.now()
     const elapsed = t1 - t0
