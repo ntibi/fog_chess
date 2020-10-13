@@ -19,9 +19,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] wasm in webworker
 
 
-- [ ] lint + clean code (camelcase snakecase)
-
-
 - [ ] allow drawing/marking on board
 
 
