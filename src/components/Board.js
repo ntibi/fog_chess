@@ -1,115 +1,115 @@
-import React, { useEffect, useState, useRef } from 'react';
-import Tile from "./Tile"
-import Piece from "./Piece"
-import Over from "./Over"
-import "./Board.css"
-import setup from "../game/setup"
-import { moves, same_coords } from "../game/moves"
-import { first_color, apply_move, maxx, maxy, other_color } from "../game/rules"
-import newId from "../utils/newId"
-import { get_move } from "../game/engine"
-import { compute_visible, fog_strength, is_visible } from "../game/fog"
-import Interface from "./interface/Interface"
-import GhostPiece from './GhostPiece';
-import { forEachTile } from "../game/tiles"
-import useWindowSize from "../hooks/useWindowSize"
+import React, { useEffect, useState, useRef } from "react";
+import Tile from "./Tile";
+import Piece from "./Piece";
+import Over from "./Over";
+import "./Board.css";
+import setup from "../game/setup";
+import { moves, same_coords } from "../game/moves";
+import { first_color, apply_move, maxx, maxy, other_color } from "../game/rules";
+import newId from "../utils/newId";
+import { get_move } from "../game/engine";
+import { compute_visible, fog_strength, is_visible } from "../game/fog";
+import Interface from "./interface/Interface";
+import GhostPiece from "./GhostPiece";
+import { forEachTile } from "../game/tiles";
+import useWindowSize from "../hooks/useWindowSize";
 
 export default function Board(props) {
-    const [selected, select] = useState()
+  const [selected, select] = useState();
 
-    const size = useWindowSize()
-    const tilesize = Math.floor((Math.min(size.width, size.height) / 10))
-    const origin = useRef(null);
+  const size = useWindowSize();
+  const tilesize = Math.floor((Math.min(size.width, size.height) / 10));
+  const origin = useRef(null);
 
-    const mouse_down = (e) => {
-        switch (e.button) {
-            case 0: // left click
-            case 2: // right click
-                select()
-                break;
-        }
+  const mouse_down = (e) => {
+    switch (e.button) {
+    case 0: // left click
+    case 2: // right click
+      select();
+      break;
     }
+  };
 
-    const cancel = (e) => {
-        e.preventDefault()
-        return false
-    }
+  const cancel = (e) => {
+    e.preventDefault();
+    return false;
+  };
 
-    const pieces_to_render = props.pieces.map(piece => <Piece
-        key={piece.id}
-        type={piece.type}
-        color={piece.color}
+  const pieces_to_render = props.pieces.map(piece => <Piece
+    key={piece.id}
+    type={piece.type}
+    color={piece.color}
+    tilesize={tilesize}
+    coords={piece.coords}
+    moves={piece.moves}
+    turn={props.turn === piece.color}
+    selected={selected && selected.id === piece.id}
+    select={() => select(piece)}
+    deselect={() => select()}
+    owner={piece.color === props.controls}
+    origin={origin}
+    move={(dst) => props.move(piece.coords, dst)}
+  />);
+
+  console.log(pieces_to_render);
+
+  const tiles = [];
+
+  const visible_tiles = []; // TODO
+
+  forEachTile(maxx, maxy, (x, y) => {
+    const coords = { x, y };
+    const visible = visible_tiles.find(t => same_coords(t, coords));
+    let highlighted = false;
+    if (selected && same_coords(selected.coords, coords))
+      highlighted = true;
+    tiles.push(
+      <Tile
+        key={`${x} ${y}`}
+        coords={coords}
         tilesize={tilesize}
-        coords={piece.coords}
-        moves={piece.moves}
-        turn={props.turn === piece.color}
-        selected={selected && selected.id === piece.id}
-        select={() => select(piece)}
-        deselect={() => select()}
-        owner={piece.color === props.controls}
-        origin={origin}
-        move={(dst) => props.move(piece.coords, dst)}
-    />)
+        color={!((x + y) % 2) ? "light" : "dark"}
+        visible={!props.fog || visible}
+        fog_strength={fog_strength(coords, visible_tiles)}
+        visible_coords={props.coords}
+      />
+    );
+  });
 
-    console.log(pieces_to_render)
-
-    const tiles = [];
-
-    const visible_tiles = []; // TODO
-
-    forEachTile(maxx, maxy, (x, y) => {
-        const coords = { x, y }
-        const visible = visible_tiles.find(t => same_coords(t, coords))
-        let highlighted = false
-        if (selected && same_coords(selected.coords, coords))
-            highlighted = true
-        tiles.push(
-            <Tile
-                key={`${x} ${y}`}
-                coords={coords}
-                tilesize={tilesize}
-                color={!((x + y) % 2) ? "light" : "dark"}
-                visible={!props.fog || visible}
-                fog_strength={fog_strength(coords, visible_tiles)}
-                visible_coords={props.coords}
-            />
-        )
-    })
-
-    return (
-        <div
-            className="board"
-            style={{
-                width: `${tilesize * 8}px`,
-                height: `${tilesize * 8}px`,
-            }}
-            ref={origin}
-            onMouseDown={mouse_down}
-            onContextMenu={cancel}
-        >
-            {tiles}
-            {pieces_to_render}
-        </div>
-    )
+  return (
+    <div
+      className="board"
+      style={{
+        width: `${tilesize * 8}px`,
+        height: `${tilesize * 8}px`,
+      }}
+      ref={origin}
+      onMouseDown={mouse_down}
+      onContextMenu={cancel}
+    >
+      {tiles}
+      {pieces_to_render}
+    </div>
+  );
 }
 
-    // get_history(n) {
-    //     return this.history.slice(this.history.length - n)
-    // }
+// get_history(n) {
+//     return this.history.slice(this.history.length - n)
+// }
 
-    // add_moves(pieces) {
-    //     return pieces.map(piece => ({
-    //         ...piece,
-    //         moves: moves(piece, pieces)
-    //     }))
-    // }
+// add_moves(pieces) {
+//     return pieces.map(piece => ({
+//         ...piece,
+//         moves: moves(piece, pieces)
+//     }))
+// }
 
-    // get_visibilty(pieces) {
-    //     const allies = pieces.filter(piece => piece.color === this.props.controls)
+// get_visibilty(pieces) {
+//     const allies = pieces.filter(piece => piece.color === this.props.controls)
 
-    //     const visible_tiles = compute_visible(allies)
-    //     return visible_tiles
-    // }
+//     const visible_tiles = compute_visible(allies)
+//     return visible_tiles
+// }
 
 //     move(src, dst) {
 //         let {
