@@ -62,3 +62,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] wrap board to only have it display the board
+
+
+- [ ] animate piece moves ?
