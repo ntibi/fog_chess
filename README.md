@@ -44,3 +44,21 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] cache moves and benchmark perf (LRU ?)
+
+
+- [ ] select online or AI
+
+
+- [ ] backend
+
+
+- [ ] redis for mm
+
+
+- [ ] your turn to play should be obvious (maybe flash an info)
+
+
+- [ ] add a restart button
+
+
+- [ ] wrap board to only have it display the board
