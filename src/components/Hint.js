@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Hint.css";
 
 export default function Tile({ tilesize, coords, move }) {

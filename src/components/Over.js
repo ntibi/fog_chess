@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Over.css";
 
 export default function Over(props) {
