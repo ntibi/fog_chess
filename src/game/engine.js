@@ -9,3 +9,11 @@ export async function get_move(pieces, turn, level) {
     engine.postMessage({pieces, turn, level});
   });
 }
+
+export const config = {
+  level: {
+    min: 1,
+    default: 3,
+    max: 5,
+  }
+};

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./Interface.css";
 
 export default function Interface(props) {
@@ -6,7 +6,7 @@ export default function Interface(props) {
     <div className="interface">
       <div className="group">
         <p>computer depth {props.level.current}</p>
-        <input type="range" min={String(props.level.min)} max={String(props.level.max)} value={String(props.level.current)} className="slider" onChange={(e) => {props.set_level(Number(e.target.value));}} />
+        <input type="range" min={String(props.engine_config.level.min)} max={String(props.engine_config.level.max)} value={String(props.level)} className="slider" onChange={(e) => {props.set_level(Number(e.target.value));}} />
         <div className={`spinner ${props.thinking && "spinning"}`}></div>
       </div>
       <div className="group">

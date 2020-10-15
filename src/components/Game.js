@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Tile from "./Tile"
-import Piece from "./Piece"
 import Over from "./Over"
 import "./Board.css"
 import setup from "../game/setup"
-import { moves, same_coords } from "../game/moves"
-import { first_color, apply_move, maxx, maxy, other_color } from "../game/rules"
+import { moves } from "../game/moves"
+import { first_color, apply_move, other_color } from "../game/rules"
 import newId from "../utils/newId"
 import { get_move } from "../game/engine"
-import { compute_visible, fog_strength, is_visible } from "../game/fog"
 import Interface from "./interface/Interface"
-import GhostPiece from './GhostPiece';
 import Board from "./Board"
+import { config } from "../game/engine"
 
 const get_default_pieces = () => setup.map(piece => ({
   ...piece,
@@ -25,7 +22,7 @@ const add_moves = (pieces) => pieces.map(piece => ({
 }))
 
 export default function Game(props) {
-  const [level, set_level] = useState(3)
+  const [level, set_level] = useState(config.level.default)
   const [over, set_over] = useState(false)
   const [coords, set_coords] = useState(false)
   const [fog, set_fog] = useState(true)
@@ -99,6 +96,7 @@ export default function Game(props) {
         fog={fog}
         toggle_fog={() => set_fog(!fog)}
         thinking={turn !== props.controls}
+        engine_config={config}
         level={level}
         set_level={set_level}
       />
