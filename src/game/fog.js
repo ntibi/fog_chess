@@ -1,43 +1,43 @@
-import { is_on_board, same_coords } from "./moves";
+import { is_on_board } from "./moves";
 import { pawn_dir } from "./rules";
-import { keyBy } from "lodash";
+
 
 export function compute_visible(allies) {
   const visible = [];
 
-  // [...Array(8 + 1).keys()].forEach(y => {
-  //     [...Array(8 + 1).keys()].forEach(x => {
-  //         visible.push({x, y})
-  //     })})
-  //     return visible
+  const make_visible = ({ x, y }) => visible[`${x} ${y}`] = true;
 
   allies.forEach(piece => {
-    visible.push(piece.coords);
+    make_visible(piece.coords);
     if (piece.type === "p") {
       const ydir = pawn_dir[piece.color];
-      visible.push(...[{
+      [{
         x: piece.coords.x + 1,
         y: piece.coords.y + ydir,
-      }, {
+      },
+      {
         x: piece.coords.x - 1,
         y: piece.coords.y + ydir,
-      }, {
+      },
+      {
         x: piece.coords.x,
         y: piece.coords.y + ydir,
       }]
         .filter(is_on_board)
-      );
+        .forEach(make_visible);
       if (!piece.moved) {
-        visible.push(...[{
+        const two_squares = {
           x: piece.coords.x,
           y: piece.coords.y + 2 * ydir,
-        }].filter(is_on_board));
+        };
+        if (is_on_board(two_squares))
+          make_visible(two_squares);
       }
     }
-    visible.push(...piece.moves);
+    piece.moves.forEach(make_visible);
   });
 
-  return keyBy(visible.filter((v, i) => visible.findIndex(x => same_coords(v, x)) === i), (tile) => `${tile.x} ${tile.y}`);
+  return visible;
 }
 
 const filter = [];

@@ -48,10 +48,15 @@ export default function Game(props) {
   }, [turn])
 
   const restart = () => {
+    const pieces = add_moves(get_default_pieces())
+    const turn = first_color
     set_over()
-    set_turn(first_color)
-    set_pieces(add_moves(get_default_pieces()))
-    set_history([])
+    set_pieces(pieces)
+    set_history([{
+      pieces,
+      turn,
+    }])
+    set_turn(turn)
   }
 
   const move = (src, dst) => {
@@ -66,12 +71,14 @@ export default function Game(props) {
     if (winner)
       set_over(winner)
 
-    set_turn(new_turn)
     set_pieces(new_pieces)
     set_history([...history, {
+      move: {src, dst},
+      ate,
       pieces: new_pieces,
       turn: new_turn,
     }])
+    set_turn(new_turn)
   }
 
   return (

@@ -30,8 +30,12 @@ export default function Board(props) {
     return false;
   };
 
+  const last = props.history[props.history.length - 1];
+
   const allies = props.pieces.filter(piece => piece.color === props.controls);
   const visible = compute_visible(allies);
+  if (last.ate)
+    visible[`${last.ate.coords.x} ${last.ate.coords.y}`] = true;
 
   const pieces_to_render = (props.fog ?
     props.pieces.filter(piece => visible[`${piece.coords.x} ${piece.coords.y}`]) :
@@ -57,7 +61,7 @@ export default function Board(props) {
   forEachTile(maxx, maxy, (x, y) => {
     const coords = { x, y };
     let highlighted = false;
-    if (selected && same_coords(selected.coords, coords))
+    if ((selected && same_coords(selected.coords, coords)) || (last.move && same_coords(coords, last.move.dst)))
       highlighted = true;
     tiles.push(
       <Tile
@@ -80,12 +84,11 @@ export default function Board(props) {
     const { pieces: prev_pieces } = props.history[props.history.length - 2];
     const prev_allies = prev_pieces.filter(piece => piece.color === props.controls);
     const prev_visible = compute_visible(prev_allies);
-    Object.values(prev_visible).forEach(tile => {
-      const piece = prev_pieces.find(p => same_coords(p.coords, tile));
-      if (piece && piece.color !== props.turn) {
-        const new_pos = props.pieces.find(x => x.id === piece.id).coords;
+    prev_pieces.forEach(prev_piece => {
+      if (prev_piece.color !== props.turn && prev_visible[`${prev_piece.coords.x} ${prev_piece.coords.y}`]) {
+        const new_pos = props.pieces.find(x => x.id === prev_piece.id).coords;
         if (!visible[`${new_pos.x} ${new_pos.y}`]) {
-          out.push(piece);
+          out.push(prev_piece);
         }
       }
     });
