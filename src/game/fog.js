@@ -1,6 +1,8 @@
 import { is_on_board } from "./moves";
 import { pawn_dir } from "./rules";
 
+export const is_visible = ({x, y}, visible) => !!visible[`${x} ${y}`];
+export const set_visible = ({x, y}, visible) => visible[`${x} ${y}`] = true;
 
 export function compute_visible(allies) {
   const visible = [];

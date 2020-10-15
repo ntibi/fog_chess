@@ -4,7 +4,7 @@ import Piece from "./Piece";
 import "./Board.css";
 import { same_coords } from "../game/moves";
 import { maxx, maxy } from "../game/rules";
-import { compute_visible, fog_strength } from "../game/fog";
+import { compute_visible, fog_strength, is_visible, set_visible } from "../game/fog";
 import GhostPiece from "./GhostPiece";
 import { forEachTile } from "../game/tiles";
 import useWindowSize from "../hooks/useWindowSize";
@@ -35,10 +35,10 @@ export default function Board(props) {
   const allies = props.pieces.filter(piece => piece.color === props.controls);
   const visible = compute_visible(allies);
   if (last.ate)
-    visible[`${last.ate.coords.x} ${last.ate.coords.y}`] = true;
+    set_visible(last.ate.coords, visible);
 
   const pieces_to_render = (props.fog ?
-    props.pieces.filter(piece => visible[`${piece.coords.x} ${piece.coords.y}`]) :
+    props.pieces.filter(piece => is_visible(piece.coords, visible)) :
     props.pieces)
     .map(piece => <Piece
       key={piece.id}
@@ -69,7 +69,7 @@ export default function Board(props) {
         coords={coords}
         tilesize={tilesize}
         color={!((x + y) % 2) ? "light" : "dark"}
-        visible={!props.fog || visible[`${x} ${y}`]}
+        visible={!props.fog || is_visible(coords, visible)}
         fog_strength={fog_strength(coords, visible)}
         visible_coords={props.coords}
         highlighted={highlighted}
@@ -85,9 +85,9 @@ export default function Board(props) {
     const prev_allies = prev_pieces.filter(piece => piece.color === props.controls);
     const prev_visible = compute_visible(prev_allies);
     prev_pieces.forEach(prev_piece => {
-      if (prev_piece.color !== props.turn && prev_visible[`${prev_piece.coords.x} ${prev_piece.coords.y}`]) {
+      if (prev_piece.color !== props.turn && is_visible(prev_piece.coords, prev_visible)) {
         const new_pos = props.pieces.find(x => x.id === prev_piece.id).coords;
-        if (!visible[`${new_pos.x} ${new_pos.y}`]) {
+        if (!is_visible(new_pos, visible)) {
           out.push(prev_piece);
         }
       }
