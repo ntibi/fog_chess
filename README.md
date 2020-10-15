@@ -28,16 +28,10 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] the pieces seem ~1px off from the tile center
 
 
-- [ ] refactor w/ hooks
-
-
-- [ ] split Board.js to avoid full re-render
-
-
 - [ ] limit bundle size (check out lazy load)
 
 
-- [ ] iterative deepening or breadth first
+- [ ] iterative deepening or breadth first ?
 
 
 - [ ] cache moves and benchmark perf (LRU ?)
@@ -56,9 +50,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] add a restart button
-
-
-- [ ] wrap board to only have it display the board
 
 
 - [ ] animate piece moves ?
