@@ -14,7 +14,6 @@ export default function Board(props) {
 
   const size = useWindowSize();
   const tilesize = Math.floor((Math.min(size.width, size.height) / 10));
-  const origin = useRef(null);
 
   const mouse_down = (e) => {
     switch (e.button) {
@@ -52,7 +51,6 @@ export default function Board(props) {
       select={() => select(piece)}
       deselect={() => select()}
       owner={piece.color === props.controls}
-      origin={origin}
       move={(dst) => props.move(piece.coords, dst)}
     />);
 
@@ -86,8 +84,9 @@ export default function Board(props) {
     const prev_visible = compute_visible(prev_allies);
     prev_pieces.forEach(prev_piece => {
       if (prev_piece.color !== props.turn && is_visible(prev_piece.coords, prev_visible)) {
-        const new_pos = props.pieces.find(x => x.id === prev_piece.id).coords;
-        if (!is_visible(new_pos, visible)) {
+        console.log(props.pieces);
+        const new_pos_piece = props.pieces.find(x => x.id === prev_piece.id);
+        if (new_pos_piece && !is_visible(new_pos_piece.coords, visible)) {
           out.push(prev_piece);
         }
       }
@@ -102,7 +101,6 @@ export default function Board(props) {
         width: `${tilesize * 8}px`,
         height: `${tilesize * 8}px`,
       }}
-      ref={origin}
       onMouseDown={mouse_down}
       onContextMenu={cancel}
     >

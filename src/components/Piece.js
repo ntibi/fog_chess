@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import pieces from "./Pieces";
 import "./Piece.css";
 import Draggable from "react-draggable";
@@ -8,10 +8,11 @@ import Hint from "./Hint";
 import newId from "../utils/newId";
 import { minx, maxx, miny, maxy } from "../game/rules";
 
-export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, origin, move, movable }) {
+export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable }) {
   const [ double_select, set_double_select ] = useState(false);
 
-  const position = { x: coords.x * tilesize, y: coords.y * tilesize };
+  const default_position = { x: coords.x * tilesize, y: coords.y * tilesize };
+  const [ position, set_position ] = useState(default_position);
 
   const style = {
     width: `${tilesize}px`,
@@ -19,24 +20,22 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
     transform: `translate(${coords.x * tilesize}px, ${coords.y * tilesize}px)`
   };
 
-  const get_mouse = (event) => {
-    const mouse = {
-      x: event.clientX,
-      y: event.clientY,
-    };
-
-    const rect = origin.current.getBoundingClientRect();
-
-    const relative_origin = {
-      x: rect.x + window.scrollX,
-      y: rect.y + window.scrollY,
+  const get_dropped_coords = () => {
+    console.log("position ", position);
+    const dropped = {
+      x: position.x + tilesize / 2,
+      y: position.y + tilesize / 2,
     };
 
     return {
-      x: mouse.x - relative_origin.x,
-      y: mouse.y - relative_origin.y,
+      x: clamp(parseInt(dropped.x / tilesize), minx, maxx),
+      y: clamp(parseInt(dropped.y / tilesize), miny, maxy),
     };
   };
+
+  useEffect(() => {
+    set_position(default_position);
+  }, [coords]);
 
   const start = () => {
     if (!movable)
@@ -49,15 +48,12 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
   };
     
   const stop = (e) => {
-    const mouse = get_mouse(e);
+    const destination = get_dropped_coords(e);
+    console.log("coords ", destination);
 
     if (!movable)
       return;
 
-    const destination = {
-      x: clamp(parseInt(mouse.x / tilesize), minx, maxx),
-      y: clamp(parseInt(mouse.y / tilesize), miny, maxy),
-    };
     if (same_coords(destination, coords)) {
       if (double_select) {
         deselect();
@@ -66,6 +62,7 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
       move(destination);
       deselect();
     } else {
+      set_position(default_position);
       deselect();
     }
     set_double_select(false);
@@ -76,7 +73,16 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
     case 0: // left click
       e.stopPropagation();
       break;
+    case 2: // right click
+      set_position(default_position);
+      break;
     }
+  };
+
+  const drag = (e, ui) => {
+    const { x, y } = ui;
+    const new_pos = { x, y };
+    set_position(new_pos);
   };
 
   return (
@@ -86,6 +92,9 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
         bounds={{ left: -tilesize / 2, top: -tilesize / 2, right: tilesize * 7.5, bottom: tilesize * 7.5 }}
         onStart={start}
         onStop={stop}
+        onDrag={drag}
+        onTouchStart={start}
+        onTouchEnd={stop}
         onMouseDown={mouse_down}
         defaultClassNameDragging="dragged"
         allowAnyClick={false}
