@@ -7,9 +7,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 ## TODO
 
-- [ ] add position evaluation pondering
-
-
 - [ ] use zobrist hashing for transposition
 
 

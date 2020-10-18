@@ -1,0 +1,20 @@
+{
+  "name": "fog_chess",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+  },
+  "scripts": {
+    "start:server": "cd server && npm start",
+    "start:client": "cd client && npm start",
+    "deploy:client": "cd client && npm run build && gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ntibi/fog_chess.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ntibi/fog_chess/issues"
+  },
+  "homepage": "https://github.com/ntibi/fog_chess#readme"
+}

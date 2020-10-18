@@ -1,0 +1,13 @@
+{
+  "name": "fog_chess_server",
+  "version": "1.0.0",
+  "scripts": {
+      "start": "nodemon src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
