@@ -84,7 +84,6 @@ export default function Board(props) {
     const prev_visible = compute_visible(prev_allies);
     prev_pieces.forEach(prev_piece => {
       if (prev_piece.color !== props.turn && is_visible(prev_piece.coords, prev_visible)) {
-        console.log(props.pieces);
         const new_pos_piece = props.pieces.find(x => x.id === prev_piece.id);
         if (new_pos_piece && !is_visible(new_pos_piece.coords, visible)) {
           out.push(prev_piece);

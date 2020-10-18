@@ -21,7 +21,6 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
   };
 
   const get_dropped_coords = () => {
-    console.log("position ", position);
     const dropped = {
       x: position.x + tilesize / 2,
       y: position.y + tilesize / 2,
@@ -49,7 +48,6 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
     
   const stop = (e) => {
     const destination = get_dropped_coords(e);
-    console.log("coords ", destination);
 
     if (!movable)
       return;
