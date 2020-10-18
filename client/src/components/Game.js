@@ -9,6 +9,7 @@ import { get_move } from "../game/engine"
 import Interface from "./interface/Interface"
 import Board from "./Board"
 import { config } from "../game/engine"
+import Online from "./interface/Online"
 
 const get_default_pieces = () => setup.map(piece => ({
   ...piece,
@@ -80,6 +81,7 @@ export default function Game(props) {
 
   return (
     <div>
+      <Online />
       <Board
         pieces={pieces}
         fog={fog}
