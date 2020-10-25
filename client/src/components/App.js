@@ -6,7 +6,7 @@ import "./App.css";
 export default function App() {
   return (
     <div>
-      <Game controls={"w"}>
+      <Game>
       </Game>
       <div className="source">
         <a href="https://github.com/ntibi/fog_chess">source</a>

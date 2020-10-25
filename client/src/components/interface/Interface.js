@@ -1,6 +1,11 @@
 import React from "react";
 import "./Interface.css";
 
+const name = {
+  w: "white",
+  b: "black",
+};
+
 export default function Interface(props) {
   return (
     <div className="interface">
@@ -12,6 +17,7 @@ export default function Interface(props) {
       <div className="group">
         <button className={`control-button ${props.coords ? "checked" : "unchecked"}`} onClick={props.toggle_coords}>coords</button>
         <button className={`control-button ${props.fog ? "checked" : "unchecked"}`} onClick={props.toggle_fog}>fog</button>
+        <button className={"control-button"} onClick={props.switch_controls}>{name[props.controls]}</button>
       </div>
     </div>
   );

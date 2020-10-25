@@ -33,9 +33,10 @@ export default function Game(props) {
     pieces,
     turn,
   }])
+  const [controls, set_controls] = useState(first_color)
 
   useEffect(() => {
-    if (!over && turn !== props.controls) {
+    if (!over && turn !== controls) {
       get_move(pieces, turn, level).then(({ src, dst }) => {
         if (src && dst)
           move(src, dst)
@@ -43,7 +44,7 @@ export default function Game(props) {
           set_over(other_color(turn))
       })
     }
-  }, [turn])
+  }, [turn, controls])
 
   const restart = () => {
     const pieces = add_moves(get_default_pieces())
@@ -86,7 +87,7 @@ export default function Game(props) {
         pieces={pieces}
         fog={fog}
         turn={turn}
-        controls={props.controls}
+        controls={controls}
         over={over}
         coords={coords}
         move={move}
@@ -97,15 +98,17 @@ export default function Game(props) {
         toggle_coords={() => set_coords(!coords)}
         fog={fog}
         toggle_fog={() => set_fog(!fog)}
-        thinking={turn !== props.controls}
+        thinking={turn !== controls}
         engine_config={config}
         level={level}
         set_level={set_level}
+        controls={controls}
+        switch_controls={() => set_controls(other_color(controls))}
       />
       {over &&
         <Over
           winner={over}
-          won={over === props.controls}
+          won={over === controls}
           restart={restart}
         />}
 
