@@ -13,7 +13,7 @@ export default function Board(props) {
   const [selected, select] = useState();
 
   const size = useWindowSize();
-  const tilesize = Math.floor((Math.min(size.width, size.height) / 10));
+  const tilesize = Math.floor((Math.min(size.width, size.height) / Math.max(maxx, maxy) * 0.66));
 
   const mouse_down = (e) => {
     switch (e.button) {

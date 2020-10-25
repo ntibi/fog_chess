@@ -2,8 +2,6 @@
   "name": "fog_chess",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-  },
   "scripts": {
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",

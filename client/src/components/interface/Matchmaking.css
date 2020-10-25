@@ -1,0 +1,13 @@
+@keyframes waiting {
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(160deg); }
+    50%  { transform: rotate(180deg); }
+    75%  { transform: rotate(200deg); }
+    100%   { transform: rotate(360deg); }
+  }
+  
+.waiting {
+  animation-name: waiting;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+} 
