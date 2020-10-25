@@ -87,7 +87,6 @@ export default function Game(props) {
   }
 
   const start_online = (socket, color) => {
-    console.log("STARTINGG ONLINE")
     restart()
     set_online(true)
     set_controls(color)
