@@ -7,7 +7,8 @@ const connect = async (session_id, socket_id) => {
 }
 
 const disconnect = async (session_id) => {
-    await redis.del(`*:${session_id}`)
+    const to_delete = await redis.keys(`*:${session_id}`);
+    await redis.del(...to_delete);
     console.log(`disconnected client ${session_id}`)
     return true
 }

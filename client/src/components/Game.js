@@ -10,6 +10,7 @@ import Interface from "./interface/Interface"
 import Board from "./Board"
 import { config } from "../game/engine"
 import Online from "./interface/Online"
+import { axios } from "../utils/axios"
 
 const get_default_pieces = () => setup.map(piece => ({
   ...piece,
@@ -34,9 +35,11 @@ export default function Game(props) {
     turn,
   }])
   const [controls, set_controls] = useState(first_color)
+  const [online, set_online] = useState(false)
+  const [socket, set_socket] = useState()
 
   useEffect(() => {
-    if (!over && turn !== controls) {
+    if (!online && !over && turn !== controls) {
       get_move(pieces, turn, level).then(({ src, dst }) => {
         if (src && dst)
           move(src, dst)
@@ -78,11 +81,27 @@ export default function Game(props) {
       turn: new_turn,
     }])
     set_turn(new_turn)
+    if (online) {
+      axios.post("/game/move", { src, dst })
+    }
   }
+
+  const start_online = (socket, color) => {
+    console.log("STARTINGG ONLINE")
+    restart()
+    set_online(true)
+    set_controls(color)
+    set_socket(socket)
+    socket.on("move", ({src, dst}) => move(src, dst))
+  }
+
 
   return (
     <div>
-      <Online />
+      <Online
+      start={start_online}
+      started={online}
+      />
       <Board
         pieces={pieces}
         fog={fog}
@@ -104,6 +123,7 @@ export default function Game(props) {
         set_level={set_level}
         controls={controls}
         switch_controls={() => set_controls(other_color(controls))}
+        online={online}
       />
       {over &&
         <Over

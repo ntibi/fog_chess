@@ -26,4 +26,5 @@ const connect = (http, session) => {
 
 module.exports = {
     connect,
+    io: () => io,
 }

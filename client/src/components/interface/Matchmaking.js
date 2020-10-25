@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { axios } from "../../utils/axios";
+import { axios, useAxios } from "../../utils/axios";
 import { HourglassEmpty } from "@material-ui/icons";
+import WaitingCount from "./WaitingCount";
 import "./Matchmaking.css";
 
 export default function Matchmaking({ socket }) {
@@ -15,11 +16,18 @@ export default function Matchmaking({ socket }) {
   let message;
 
   if (connected)
-    message = <p>playing</p>;
+    message = <div>
+      <p>playing</p>
+    </div>;
   else if (waiting)
-    message = <p>finding an opponent <HourglassEmpty className="waiting" /></p>;
+    message = <div>
+      <p>finding an opponent <HourglassEmpty className="waiting" /></p>
+      <WaitingCount/>
+    </div>;
   else
-    message = <button onClick={queue}>matchmaking</button>;
+    message = <div>
+      <button onClick={queue}>matchmaking</button>
+    </div>;
   return (
     <div>
       {message}

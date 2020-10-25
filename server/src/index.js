@@ -10,6 +10,7 @@ const socket_session = require("express-socket.io-session");
 const redis = require("./models/redis");
 const { server: { secret } } = require("../../config");
 const matchmaking = require("./routes/matchmaking")
+const game = require("./routes/game")
 const { connect: connect_sockets } = require("./models/socket")
 const { client: { url } } = require("../../config")
 require("./models/matchmaking")
@@ -54,5 +55,8 @@ app.use(body_parser.urlencoded({extended: true}));
 app.get('/isup', require("./routes/isup"))
 
 app.post('/mm/queue', matchmaking.queue)
+app.get('/mm/count', matchmaking.count)
+
+app.post("/game/move", game.move)
 
 server.listen(port, () => console.log(`app listening on port ${port}`))

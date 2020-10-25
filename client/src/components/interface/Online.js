@@ -33,7 +33,7 @@ export default function Online(props) {
 
     const socket = io(url);
     socket.on("connect", () => set_connected(true));
-    socket.on("event", (data) => console.log(data));
+    socket.on("start", ({color}) => props.start(socket, color));
     socket.on("disconnect", () => set_connected(false));
     set_socket(socket);
   };
@@ -43,7 +43,7 @@ export default function Online(props) {
       {message}
       {!data &&
               <button style={buttonStyle} onClick={connect}>go online</button>}
-      {data && <Matchmaking
+      {!props.started && data && <Matchmaking
         socket={socket}
       />}
     </div>

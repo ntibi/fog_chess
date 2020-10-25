@@ -5,7 +5,9 @@
   "scripts": {
     "start:server": "cd server && npm start",
     "start:client": "cd client && npm start",
-    "deploy:client": "cd client && npm run build && gh-pages -d dist"
+    "deploy:client": "cd client && npm run build && gh-pages -d dist",
+    "redis:clear": "redis-cli flushall",
+    "redis:release": "redis-cli del 'lock:queue'"
   },
   "repository": {
     "type": "git",
