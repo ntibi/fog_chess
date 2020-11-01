@@ -41,7 +41,7 @@ export default function Online(props) {
   return (
     <div className="online_menu">
       {message}
-      {!data &&
+      {!data && !loading &&
               <button style={buttonStyle} onClick={connect}>go online</button>}
       {!props.started && data && <Matchmaking
         socket={socket}
