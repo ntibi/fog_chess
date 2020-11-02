@@ -34,6 +34,12 @@ module.exports = {
   ],
   devServer: {
     host: "0.0.0.0",
-    open: false
-  }
+    open: false,
+    proxy: {
+      "/": "http://localhost:8081"
+    }
+  },
+  node: {
+    fs: "empty"
+  },
 };

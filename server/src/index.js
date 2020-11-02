@@ -6,13 +6,14 @@ const { v4: uuid } = require("uuid")
 const cookie_parser = require('cookie-parser');
 const body_parser = require('body-parser');
 const socket_session = require("express-socket.io-session");
+const config = require("config");
 
 const redis = require("./models/redis");
-const { server: { secret } } = require("../../config");
 const matchmaking = require("./routes/matchmaking")
 const game = require("./routes/game")
 const { connect: connect_sockets } = require("./models/socket")
-const { client: { url } } = require("../../config")
+const url = config.get("client.url");
+const secret = config.get("server.secret");
 require("./models/matchmaking")
 
 const app = express()

@@ -4,9 +4,6 @@ import { Refresh, Warning } from "@material-ui/icons";
 import Matchmaking from "./Matchmaking";
 import { useAxios } from "../../utils/axios";
 import io from "socket.io-client";
-import config from "../../../../config";
-
-const { server: { url } } = config;
 
 export default function Online(props) {
   const [{ data, loading, error }, refetch] = useAxios("/isup", { manual: true });
@@ -31,7 +28,7 @@ export default function Online(props) {
   const connect = () => {
     refetch();
 
-    const socket = io(url);
+    const socket = io();
     socket.on("connect", () => set_connected(true));
     socket.on("start", ({color}) => props.start(socket, color));
     socket.on("disconnect", () => set_connected(false));
