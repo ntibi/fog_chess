@@ -37,6 +37,17 @@ export default function Game(props) {
   const [controls, set_controls] = useState(first_color)
   const [online, set_online] = useState(false)
   const [socket, set_socket] = useState()
+  const [move_to_send, send_move] = useState(false)
+
+  useEffect(() => {
+    if (move_to_send) {
+      socket.once("move", ({ src, dst }) => move(src, dst))
+      const { src, dst } = move_to_send
+      if (src && dst)
+        axios.post("/game/move", { src, dst })
+      send_move(false)
+    }
+  }, [move_to_send])
 
   useEffect(() => {
     if (!online && !over && turn !== controls) {
@@ -81,8 +92,8 @@ export default function Game(props) {
       turn: new_turn,
     }])
     set_turn(new_turn)
-    if (online) {
-      axios.post("/game/move", { src, dst })
+    if (online && turn == controls) {
+      send_move({ src, dst })
     }
   }
 
@@ -91,7 +102,8 @@ export default function Game(props) {
     set_online(true)
     set_controls(color)
     set_socket(socket)
-    socket.on("move", ({src, dst}) => move(src, dst))
+    if (color !== controls)
+      send_move(true)
   }
 
 
