@@ -44,7 +44,7 @@ export default function Game(props) {
       socket.once("move", ({ src, dst }) => move(src, dst))
       const { src, dst } = move_to_send
       if (src && dst)
-        axios.post("/game/move", { src, dst })
+        axios.post("/api/game/move", { src, dst })
       send_move(false)
     }
   }, [move_to_send])
