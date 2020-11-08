@@ -49,7 +49,7 @@ const count = async () => {
     return keys.length
 }
 
-setInterval(update, 1000)
+// setInterval(update, 1000)
 
 module.exports = {
     queue,
