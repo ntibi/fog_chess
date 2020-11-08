@@ -53,3 +53,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] handle game leave
+
+
+- [ ] rotate board for black
