@@ -2,7 +2,7 @@ const matchmaking = require("../models/matchmaking")
 
 const queue = async (req, res) => {
     await matchmaking.queue(req.session.id)
-    await matchmaking.update()
+    matchmaking.update()
     res.sendStatus(200)
 }
 
