@@ -36,7 +36,7 @@ module.exports = {
     host: "0.0.0.0",
     open: false,
     proxy: {
-      "/": "http://localhost:8081"
+      "/": "http://localhost:8081/api"
     }
   },
   node: {

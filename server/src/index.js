@@ -18,6 +18,7 @@ require("./models/matchmaking")
 
 const app = express()
 const server = http.createServer(app);
+const api = express.Router()
 
 const port = process.env.PORT || 8081
 
@@ -53,11 +54,13 @@ connect_sockets(server, socket_session(session))
 app.use(body_parser.json());
 app.use(body_parser.urlencoded({extended: true}));
 
-app.get('/isup', require("./routes/isup"))
+api.get('/isup', require("./routes/isup"))
 
-app.post('/mm/queue', matchmaking.queue)
-app.get('/mm/count', matchmaking.count)
+api.post('/mm/queue', matchmaking.queue)
+api.get('/mm/count', matchmaking.count)
 
-app.post("/game/move", game.move)
+api.post("/game/move", game.move)
+
+app.use("/api", api)
 
 server.listen(port, () => console.log(`app listening on port ${port}`))
