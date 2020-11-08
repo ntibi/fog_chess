@@ -1,0 +1,27 @@
+div.thinking > p.waiting {
+  opacity: 0.75;
+  font-weight: normal;
+}
+
+div.thinking > p.play {
+  opacity: 1;
+  animation-name: info_play;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+}
+
+@keyframes info_play {
+    0%   {
+        opacity: 0.75;
+        font-weight: normal;
+        transform: scale(1);
+    }
+    50%   {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+    100%   {
+        opacity: 1;
+        transform: scale(1);
+    }
+  }

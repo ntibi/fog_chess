@@ -21,7 +21,7 @@ export default function Matchmaking({ socket }) {
     </div>;
   else if (waiting)
     message = <div>
-      <p>finding an opponent <HourglassEmpty className="waiting" /></p>
+      <p>finding an opponent <HourglassEmpty className="waiting_icon" /></p>
       <WaitingCount/>
     </div>;
   else

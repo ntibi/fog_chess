@@ -1,5 +1,6 @@
 import React from "react";
 import "./Interface.css";
+import Thinking from "./Thinking";
 
 const name = {
   w: "white",
@@ -7,12 +8,13 @@ const name = {
 };
 
 export default function Interface(props) {
+
   return (
     <div className="interface">
       <div className="group">
+        <Thinking thinking={props.thinking} />
         {!props.online && <p>computer depth {props.level.current}</p>}
         {!props.online && <input type="range" min={String(props.engine_config.level.min)} max={String(props.engine_config.level.max)} value={String(props.level)} className="slider" onChange={(e) => {props.set_level(Number(e.target.value));}} />}
-        <div className={`spinner ${props.thinking && "spinning"}`}></div>
       </div>
       <div className="group">
         <button className={`control-button ${props.coords ? "checked" : "unchecked"}`} onClick={props.toggle_coords}>coords</button>
