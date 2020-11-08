@@ -47,3 +47,9 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] list eaten pieces
+
+
+- [ ] handle online restart
+
+
+- [ ] handle game leave
