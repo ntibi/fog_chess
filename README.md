@@ -44,3 +44,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] add amdmin page (players connected, matches, ...)
+
+
+- [ ] list eaten pieces
