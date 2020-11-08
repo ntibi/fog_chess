@@ -49,13 +49,13 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
   const stop = (e) => {
     const destination = get_dropped_coords(e);
 
-    if (!movable)
-      return;
-
-    if (same_coords(destination, coords)) {
+    if (!movable) {
+      set_position(default_position);
+    } else if (same_coords(destination, coords)) {
       if (double_select) {
         deselect();
       }
+      set_position(default_position);
     } else if (moves.find(move => same_coords(move, destination))) {
       move(destination);
       deselect();
