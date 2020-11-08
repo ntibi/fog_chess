@@ -6,7 +6,7 @@ import { useAxios } from "../../utils/axios";
 import io from "socket.io-client";
 
 export default function Online(props) {
-  const [{ data, loading, error }, refetch] = useAxios("/isup", { manual: true });
+  const [{ data, loading, error }, refetch] = useAxios("/api/isup", { manual: true });
   const [ socket, set_socket ] = useState();
   const [ connected, set_connected ] = useState();
 
@@ -28,7 +28,7 @@ export default function Online(props) {
   const connect = () => {
     refetch();
 
-    const socket = io();
+    const socket = io(window.location.href, { path: "/api/socket.io"});
     socket.on("connect", () => set_connected(true));
     socket.on("start", ({color}) => props.start(socket, color));
     socket.on("disconnect", () => set_connected(false));

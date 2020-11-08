@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAxios } from "../../utils/axios";
 
 export default function WaitingCount() {
-  const [{ data, loading, error }, refresh] = useAxios("/mm/count");
+  const [{ data, loading, error }, refresh] = useAxios("/api/mm/count");
 
   useEffect(() => {
     const interval = setInterval(refresh, 10000);

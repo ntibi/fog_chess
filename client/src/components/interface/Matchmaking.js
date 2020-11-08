@@ -10,7 +10,7 @@ export default function Matchmaking({ socket }) {
 
   const queue = async () => {
     set_waiting(true);
-    await axios.post("/mm/queue");
+    await axios.post("/api/mm/queue");
   };
 
   let message;

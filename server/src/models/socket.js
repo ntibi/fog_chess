@@ -18,6 +18,7 @@ const connect = (http, session) => {
     io = socket(http, {
         origins: "*:*",
         serveClient: false,
+        path: "/api/socket.io",
     });
     io.use(session)
     set_listeners()
