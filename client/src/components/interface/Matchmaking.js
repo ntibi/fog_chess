@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { axios, useAxios } from "../../utils/axios";
+import { axios } from "../../utils/axios";
 import { HourglassEmpty } from "@material-ui/icons";
 import WaitingCount from "./WaitingCount";
 import "./Matchmaking.css";
 
-export default function Matchmaking({ socket }) {
+export default function Matchmaking({ started }) {
   const [ waiting, set_waiting ] = useState(false);
-  const [ connected, set_connected ] = useState(false);
 
   const queue = async () => {
     set_waiting(true);
@@ -15,7 +14,7 @@ export default function Matchmaking({ socket }) {
 
   let message;
 
-  if (connected)
+  if (started)
     message = <div>
       <p>playing</p>
     </div>;

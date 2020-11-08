@@ -1,14 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Online.css";
 import { Refresh, Warning } from "@material-ui/icons";
 import Matchmaking from "./Matchmaking";
 import { useAxios } from "../../utils/axios";
 import io from "socket.io-client";
 
-export default function Online(props) {
+export default function Online({ start, started }) {
   const [{ data, loading, error }, refetch] = useAxios("/api/isup", { manual: true });
   const [ socket, set_socket ] = useState();
   const [ connected, set_connected ] = useState();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("connect", () => {
+        socket.on("start", ({color}) => start(socket, color));
+        set_connected(true);
+      });
+      socket.on("disconnect", () => set_connected(false));
+    }
+  }, [socket]);
 
   const buttonStyle = {
     visibility: data ? "hidden" : "visible",
@@ -25,13 +35,10 @@ export default function Online(props) {
     message = <p>currently offline</p>;
   }
 
-  const connect = () => {
-    refetch();
+  const connect = async () => {
+    await refetch();
 
     const socket = io(window.location.href, { path: "/api/socket.io"});
-    socket.on("connect", () => set_connected(true));
-    socket.on("start", ({color}) => props.start(socket, color));
-    socket.on("disconnect", () => set_connected(false));
     set_socket(socket);
   };
 
@@ -40,8 +47,9 @@ export default function Online(props) {
       {message}
       {!data && !loading &&
               <button style={buttonStyle} onClick={connect}>go online</button>}
-      {!props.started && data && connected && <Matchmaking
+      {!started && data && connected && <Matchmaking
         socket={socket}
+        started={started}
       />}
     </div>
   );

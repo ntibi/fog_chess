@@ -14,7 +14,6 @@ const game = require("./routes/game")
 const { connect: connect_sockets } = require("./models/socket")
 const url = config.get("client.url");
 const secret = config.get("server.secret");
-require("./models/matchmaking")
 
 const app = express()
 const server = http.createServer(app);

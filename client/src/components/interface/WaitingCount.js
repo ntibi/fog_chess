@@ -5,7 +5,7 @@ export default function WaitingCount() {
   const [{ data, loading, error }, refresh] = useAxios("/api/mm/count");
 
   useEffect(() => {
-    const interval = setInterval(refresh, 10000);
+    const interval = setInterval(refresh, 1000);
     return () => {     
       clearInterval(interval);
     };
