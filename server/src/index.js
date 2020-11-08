@@ -32,7 +32,10 @@ const session = express_session({
     secure: false,
   },
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: {
+    secure: false,
+    sameSite: "strict",
+  }
 })
 
 app.use(cors({
