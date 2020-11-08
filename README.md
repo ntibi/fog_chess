@@ -40,9 +40,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] add a restart button
 
 
-- [ ] animate piece moves ?
-
-
 - [ ] add amdmin page (players connected, matches, ...)
 
 
