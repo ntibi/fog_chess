@@ -52,6 +52,9 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] handle game leave
 
 
+- [ ] warn user on socket disconnect
+
+
 - [ ] rotate board for black
 
 
