@@ -40,7 +40,7 @@ export default function Online(props) {
       {message}
       {!data && !loading &&
               <button style={buttonStyle} onClick={connect}>go online</button>}
-      {!props.started && data && <Matchmaking
+      {!props.started && data && connected && <Matchmaking
         socket={socket}
       />}
     </div>
