@@ -25,25 +25,13 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] measure the real tile size (might be 1px off)
 
 
-- [ ] the pieces seem ~1px off from the tile center
-
-
 - [ ] limit bundle size (check out lazy load)
-
-
-- [ ] iterative deepening or breadth first ?
 
 
 - [ ] cache moves and benchmark perf (LRU ?)
 
 
-- [ ] add a restart button
-
-
 - [ ] add amdmin page (players connected, matches, ...)
-
-
-- [ ] list eaten pieces
 
 
 - [ ] handle online restart
@@ -59,3 +47,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 
 
 - [ ] switch memorystore to redis
+
+
+- [ ] get good in frontend and design ¯\_(ツ)_/¯
