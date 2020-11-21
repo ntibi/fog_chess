@@ -34,7 +34,7 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
 
   useEffect(() => {
     set_position(default_position);
-  }, [coords]);
+  }, [coords, tilesize]);
 
   const start = () => {
     if (!movable)
