@@ -9,6 +9,11 @@ export const { minx, miny, maxx, maxy } = {
 
 export const colors = ["w", "b"]
 
+export const color_name = {
+  w: "white",
+  b: "black",
+};
+
 export const pieces = ["p", "n", "b", "r", "q", "k"]
 
 export const all_pieces = pieces.map(p => colors.map(c => `${p}${c}`)).flat()
@@ -20,6 +25,15 @@ export const other_color = (color) => colors[(colors.indexOf(color) + 1) % color
 export const pawn_dir = {
     w: -1,
     b: 1,
+}
+
+export const score = {
+    p: 1,
+    n: 3,
+    b: 3,
+    r: 5,
+    q: 9,
+    k: 9999,
 }
 
 export const promotable = ["p"]

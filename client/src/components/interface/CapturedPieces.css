@@ -1,0 +1,9 @@
+.eatenpieces {
+  position: relative;
+}
+
+.eatenpiece {
+  position: relative;
+  transform: scale(0.70);
+  margin-left: -25px;
+}

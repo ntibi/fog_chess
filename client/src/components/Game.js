@@ -135,6 +135,7 @@ export default function Game(props) {
         controls={controls}
         switch_controls={() => set_controls(other_color(controls))}
         online={online}
+        pieces={pieces}
       />
       {over &&
         <Over
