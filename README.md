@@ -49,4 +49,7 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] switch memorystore to redis
 
 
+- [ ] cache hooks w/ useCallback, useMemo, ...
+
+
 - [ ] get good in frontend and design ¯\_(ツ)_/¯
