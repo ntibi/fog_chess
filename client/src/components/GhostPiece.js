@@ -9,7 +9,6 @@ function GhostPiece(props) {
     height: `${tileSize}px`,
     left: `${coords.x * tileSize}px`,
     top: `${coords.y * tileSize}px`,
-    rotate: `${props.rotation}deg`,
     position: "absolute",
     opacity: 0.2,
   };

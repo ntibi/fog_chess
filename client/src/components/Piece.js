@@ -8,7 +8,7 @@ import Hint from "./Hint";
 import newId from "../utils/newId";
 import { minx, maxx, miny, maxy } from "../game/rules";
 
-export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable, rotation }) {
+export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable }) {
   const [ double_select, set_double_select ] = useState(false);
 
   const default_position = { x: coords.x * tilesize, y: coords.y * tilesize };
@@ -17,7 +17,6 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
   const style = {
     width: `${tilesize}px`,
     height: `${tilesize}px`,
-    rotate: `${rotation}deg`,
   };
 
   const get_dropped_coords = () => {
@@ -79,11 +78,7 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
 
   const drag = (e, ui) => {
     const { x, y } = ui;
-    const new_pos = {
-      x: x * Math.cos(rotation * Math.PI / 180) - y * Math.sin(rotation * Math.PI / 180),
-      y: x * Math.sin(rotation * Math.PI / 180) + y * Math.cos(rotation * Math.PI / 180),
-    };
-    set_position(new_pos);
+    set_position({ x, y });
   };
 
   return (
