@@ -8,7 +8,7 @@ import Hint from "./Hint";
 import newId from "../utils/newId";
 import { minx, maxx, miny, maxy } from "../game/rules";
 
-export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable }) {
+export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable, rotation }) {
   const [ double_select, set_double_select ] = useState(false);
 
   const default_position = { x: coords.x * tilesize, y: coords.y * tilesize };
@@ -17,7 +17,7 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
   const style = {
     width: `${tilesize}px`,
     height: `${tilesize}px`,
-    transform: `translate(${coords.x * tilesize}px, ${coords.y * tilesize}px)`
+    rotate: `${rotation}deg`,
   };
 
   const get_dropped_coords = () => {
@@ -79,7 +79,10 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
 
   const drag = (e, ui) => {
     const { x, y } = ui;
-    const new_pos = { x, y };
+    const new_pos = {
+      x: x * Math.cos(rotation * Math.PI / 180) - y * Math.sin(rotation * Math.PI / 180),
+      y: x * Math.sin(rotation * Math.PI / 180) + y * Math.cos(rotation * Math.PI / 180),
+    };
     set_position(new_pos);
   };
 
@@ -97,13 +100,15 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
         defaultClassNameDragging="dragged"
         allowAnyClick={false}
       >
-        <img
-          className="piece"
-          style={style}
-          draggable={false}
-          src={pieces[color][type]}
-          alt={`${type}${color}`}
-        />
+        <div className="piece-wrapper">
+          <img
+            className="piece"
+            style={style}
+            draggable={false}
+            src={pieces[color][type]}
+            alt={`${type}${color}`}
+          />
+        </div>
       </Draggable>
       {movable && selected && moves.map(m =>
         <Hint

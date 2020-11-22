@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tile from "./Tile";
 import Piece from "./Piece";
 import "./Board.css";
 import { same_coords } from "../game/moves";
-import { maxx, maxy } from "../game/rules";
+import { colors, first_color, maxx, maxy } from "../game/rules";
 import { compute_visible, fog_strength, is_visible, set_visible } from "../game/fog";
 import GhostPiece from "./GhostPiece";
 import { forEachTile } from "../game/tiles";
@@ -11,9 +11,14 @@ import useWindowSize from "../hooks/useWindowSize";
 
 export default function Board(props) {
   const [selected, select] = useState();
+  const [rotation, set_rotation] = useState(0);
 
   const size = useWindowSize();
   const tilesize = Math.floor((Math.min(size.width, size.height) / Math.max(maxx, maxy) * 0.66));
+
+  useEffect(() => {
+    set_rotation(colors.findIndex(x => x === props.controls) * (360 / colors.length));
+  }, [props.controls]);
 
   const mouse_down = (e) => {
     switch (e.button) {
@@ -52,6 +57,7 @@ export default function Board(props) {
       deselect={() => select()}
       owner={piece.color === props.controls}
       move={(dst) => props.move(piece.coords, dst)}
+      rotation={rotation}
     />);
 
   const tiles = [];
@@ -71,6 +77,7 @@ export default function Board(props) {
         fog_strength={fog_strength(coords, visible)}
         visible_coords={props.coords}
         highlighted={highlighted}
+        rotation={rotation}
       />
     );
   });
@@ -99,6 +106,7 @@ export default function Board(props) {
       style={{
         width: `${tilesize * 8}px`,
         height: `${tilesize * 8}px`,
+        transform: `rotate(${rotation}deg)`,
       }}
       onMouseDown={mouse_down}
       onContextMenu={cancel}
@@ -111,6 +119,7 @@ export default function Board(props) {
         tileSize={tilesize}
         coords={x.coords}
         key={x.id}
+        rotation={rotation}
       />)}
 
     </div>

@@ -1,8 +1,8 @@
-.piece {
+.piece-wrapper {
     z-index: 20;
     position: absolute;
 }
 
-.piece.dragged {
+.piece-wrapper.dragged {
     z-index: 50;
 }

@@ -7,7 +7,9 @@ function GhostPiece(props) {
   const style = {
     width: `${tileSize}px`,
     height: `${tileSize}px`,
-    transform: `translate(${coords.x * tileSize}px, ${coords.y * tileSize}px)`,
+    left: `${coords.x * tileSize}px`,
+    top: `${coords.y * tileSize}px`,
+    rotate: `${props.rotation}deg`,
     position: "absolute",
     opacity: 0.2,
   };
