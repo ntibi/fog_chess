@@ -43,13 +43,13 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] warn user on socket disconnect
 
 
-- [ ] rotate board for black
-
-
 - [ ] switch memorystore to redis
 
 
 - [ ] cache hooks w/ useCallback, useMemo, ...
+
+
+- [ ] stop using transform rotate() to rotate the board
 
 
 - [ ] get good in frontend and design ¯\_(ツ)_/¯
