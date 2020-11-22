@@ -3,7 +3,7 @@ import Tile from "./Tile";
 import Piece from "./Piece";
 import "./Board.css";
 import { same_coords } from "../game/moves";
-import { maxx, maxy } from "../game/rules";
+import { first_color, maxx, maxy } from "../game/rules";
 import { compute_visible, fog_strength, is_visible, set_visible } from "../game/fog";
 import GhostPiece from "./GhostPiece";
 import { forEachTile } from "../game/tiles";
@@ -36,35 +36,28 @@ export default function Board(props) {
   if (last.ate)
     set_visible(last.ate.coords, visible);
 
-  const pieces_to_render = (props.fog ?
-    props.pieces.filter(piece => is_visible(piece.coords, visible)) :
-    props.pieces)
-    .map(piece => <Piece
-      key={piece.id}
-      type={piece.type}
-      color={piece.color}
-      tilesize={tilesize}
-      coords={piece.coords}
-      moves={piece.moves}
-      movable={props.turn === piece.color && piece.color === props.controls}
-      selected={selected && selected.id === piece.id}
-      select={() => select(piece)}
-      deselect={() => select()}
-      owner={piece.color === props.controls}
-      move={(dst) => props.move(piece.coords, dst)}
-    />);
-
   const tiles = [];
 
+  const _pos_to_coords = {};
+  const _coords_to_pos = {};
+  const pos_to_coords = (v) => _pos_to_coords[`${v.x} ${v.y}`];
+  const coords_to_pos = (v) => _coords_to_pos[`${v.x} ${v.y}`];
   forEachTile(maxx, maxy, (x, y) => {
     const coords = { x, y };
     let highlighted = false;
+    const pos = props.controls === first_color ?
+      coords :
+      { x: maxy - coords.x, y: maxy - coords.y, };
+    _pos_to_coords[`${pos.x} ${pos.y}`] = coords;
+    _coords_to_pos[`${coords.x} ${coords.y}`] = pos;
+
     if ((selected && same_coords(selected.coords, coords)) || (last.move && same_coords(coords, last.move.dst)))
       highlighted = true;
     tiles.push(
       <Tile
         key={`${x} ${y}`}
         coords={coords}
+        pos={pos}
         tilesize={tilesize}
         color={!((x + y) % 2) ? "light" : "dark"}
         visible={!props.fog || is_visible(coords, visible)}
@@ -74,6 +67,27 @@ export default function Board(props) {
       />
     );
   });
+
+  const pieces_to_render = (props.fog ?
+    props.pieces.filter(piece => is_visible(piece.coords, visible)) :
+    props.pieces)
+    .map(piece => <Piece
+      key={piece.id}
+      type={piece.type}
+      color={piece.color}
+      tilesize={tilesize}
+      coords={piece.coords}
+      pos={coords_to_pos(piece.coords)}
+      pos_to_coords={pos_to_coords}
+      coords_to_pos={coords_to_pos}
+      moves={piece.moves}
+      movable={props.turn === piece.color && piece.color === props.controls}
+      selected={selected && selected.id === piece.id}
+      select={() => select(piece)}
+      deselect={() => select()}
+      owner={piece.color === props.controls}
+      move={(dst) => props.move(piece.coords, dst)}
+    />);
 
   const ghost_pieces = (() => {
     const out = [];
@@ -86,7 +100,10 @@ export default function Board(props) {
       if (prev_piece.color !== props.turn && is_visible(prev_piece.coords, prev_visible)) {
         const new_pos_piece = props.pieces.find(x => x.id === prev_piece.id);
         if (new_pos_piece && !is_visible(new_pos_piece.coords, visible)) {
-          out.push(prev_piece);
+          out.push({
+            ...prev_piece,
+            pos: coords_to_pos(prev_piece.coords),
+          });
         }
       }
     });
@@ -109,7 +126,7 @@ export default function Board(props) {
         type={x.type}
         color={x.color}
         tileSize={tilesize}
-        coords={x.coords}
+        pos={x.pos}
         key={x.id}
       />)}
 

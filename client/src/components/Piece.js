@@ -8,10 +8,10 @@ import Hint from "./Hint";
 import newId from "../utils/newId";
 import { minx, maxx, miny, maxy } from "../game/rules";
 
-export default function Piece({ coords, tilesize, color, type, moves, selected, select, deselect, move, movable }) {
+export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tilesize, color, type, moves, selected, select, deselect, move, movable }) {
   const [ double_select, set_double_select ] = useState(false);
 
-  const default_position = { x: coords.x * tilesize, y: coords.y * tilesize };
+  const default_position = { x: pos.x * tilesize, y: pos.y * tilesize };
   const [ position, set_position ] = useState(default_position);
 
   const style = {
@@ -25,15 +25,15 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
       y: position.y + tilesize / 2,
     };
 
-    return {
+    return pos_to_coords({
       x: clamp(parseInt(dropped.x / tilesize), minx, maxx),
       y: clamp(parseInt(dropped.y / tilesize), miny, maxy),
-    };
+    });
   };
 
   useEffect(() => {
     set_position(default_position);
-  }, [coords, tilesize]);
+  }, [coords, pos, tilesize]);
 
   const start = () => {
     if (!movable)
@@ -108,7 +108,7 @@ export default function Piece({ coords, tilesize, color, type, moves, selected, 
       {movable && selected && moves.map(m =>
         <Hint
           tilesize={tilesize}
-          coords={m}
+          pos={coords_to_pos(m)}
           move={() => move(m)}
           key={newId("hint")}
         />)}
