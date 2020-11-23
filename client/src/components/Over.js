@@ -1,14 +1,14 @@
 import React from "react";
 import "./Over.css";
 
-export default function Over(props) {
+export default function Over({ won, restart }) {
   return (
     <div
       className="over"
     >
       <div>
-        <p>you {props.won ? "won" : "lost"}</p>
-        <button onClick={props.restart}>restart</button>
+        <p>you {won ? "won" : "lost"}</p>
+        <button onClick={restart}>restart</button>
       </div>
     </div>
   );

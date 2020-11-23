@@ -23,7 +23,7 @@ const add_moves = (pieces) => pieces.map(piece => ({
   moves: moves(piece, pieces),
 }))
 
-export default function Game(props) {
+export default function Game() {
   const [level, set_level] = useState(config.level.default)
   const [over, set_over] = useState(false)
   const [coords, set_coords] = useState(false)
