@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Online.css";
 import { Refresh, Warning } from "@material-ui/icons";
 import Matchmaking from "./Matchmaking";
@@ -35,12 +35,12 @@ export default function Online({ start, started }) {
     message = <p>currently offline</p>;
   }
 
-  const connect = async () => {
+  const connect = useCallback(async () => {
     await refetch();
 
     const socket = io(window.location.href, { path: "/api/socket.io"});
     set_socket(socket);
-  };
+  }, [refetch, set_socket, window.location.href]);
 
   return (
     <div className="online_menu">
