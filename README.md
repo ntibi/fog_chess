@@ -1,8 +1,8 @@
-# [FOG CHESS](https://ntibi.github.io/fog_chess/)
+# [FOG CHESS](https://chess.ntibi.fr)
 
 chess variant with imperfect information known as [dark chess](https://en.wikipedia.org/wiki/Dark_chess) or [kriegspiel](https://en.wikipedia.org/wiki/Kriegspiel_(chess))
 
-[play it here](https://ntibi.github.io/fog_chess/)
+[play it here](https://chess.ntibi.fr)
 
 
 ## TODO
