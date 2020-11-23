@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { axios } from "../../utils/axios";
 import { HourglassEmpty } from "@material-ui/icons";
 import WaitingCount from "./WaitingCount";
@@ -7,10 +7,10 @@ import "./Matchmaking.css";
 export default function Matchmaking({ started }) {
   const [ waiting, set_waiting ] = useState(false);
 
-  const queue = async () => {
+  const queue = useCallback(async () => {
     set_waiting(true);
     await axios.post("/api/mm/queue");
-  };
+  }, [set_waiting]);
 
   let message;
 
