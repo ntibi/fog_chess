@@ -13,9 +13,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] benchmark perf
 
 
-- [ ] move computation heavy functions away from the render functions
-
-
 - [ ] wasm in webworker
 
 
