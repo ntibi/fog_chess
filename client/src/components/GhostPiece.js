@@ -1,14 +1,12 @@
 import React from "react";
 import pieces from "./Pieces";
 
-function GhostPiece(props) {
-  const { pos, tileSize } = props;
-
+function GhostPiece({ pos, tilesize, color, type }) {
   const style = {
-    width: `${tileSize}px`,
-    height: `${tileSize}px`,
-    left: `${pos.x * tileSize}px`,
-    top: `${pos.y * tileSize}px`,
+    width: `${tilesize}px`,
+    height: `${tilesize}px`,
+    left: `${pos.x * tilesize}px`,
+    top: `${pos.y * tilesize}px`,
     position: "absolute",
     opacity: 0.2,
   };
@@ -18,8 +16,8 @@ function GhostPiece(props) {
       className="ghost_piece"
       style={style}
       draggable={false}
-      src={pieces[props.color][props.type]}
-      alt={`${props.type}${props.color}`}
+      src={pieces[color][type]}
+      alt={`${type}${color}`}
     />
   );
 }
