@@ -14,7 +14,7 @@ const cancel = (e) => {
   return false;
 };
 
-export default function Board({ history, pieces, controls, fog_enabled, coords_enabled, turn, move, history }) {
+export default function Board({ history, pieces, controls, fog_enabled, coords_enabled, turn, move }) {
   const [selected, select] = useState();
 
   const size = useWindowSize();
