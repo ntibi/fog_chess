@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import pieces from "./Pieces";
 import "./Piece.css";
 import Draggable from "react-draggable";
@@ -19,7 +19,11 @@ export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tiles
     height: `${tilesize}px`,
   };
 
-  const get_dropped_coords = () => {
+  useEffect(() => {
+    set_position(default_position);
+  }, [coords, pos, tilesize]);
+
+  const get_dropped_coords = useCallback(() => {
     const dropped = {
       x: position.x + tilesize / 2,
       y: position.y + tilesize / 2,
@@ -29,13 +33,9 @@ export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tiles
       x: clamp(parseInt(dropped.x / tilesize), minx, maxx),
       y: clamp(parseInt(dropped.y / tilesize), miny, maxy),
     });
-  };
+  }, [position]);
 
-  useEffect(() => {
-    set_position(default_position);
-  }, [coords, pos, tilesize]);
-
-  const start = () => {
+  const start = useCallback(() => {
     if (!movable)
       return;
 
@@ -43,9 +43,9 @@ export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tiles
       set_double_select(true);
     }
     select();
-  };
+  }, [movable, selected, set_double_select, select]);
     
-  const stop = (e) => {
+  const stop = useCallback((e) => {
     const destination = get_dropped_coords(e);
 
     if (!movable) {
@@ -63,9 +63,9 @@ export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tiles
       deselect();
     }
     set_double_select(false);
-  };
+  }, [get_dropped_coords, movable, set_position, double_select, deselect, moves, move]);
 
-  const mouse_down = (e) => {
+  const mouse_down = useCallback((e) => {
     switch (e.button) {
     case 0: // left click
       e.stopPropagation();
@@ -74,12 +74,12 @@ export default function Piece({ coords, pos, pos_to_coords, coords_to_pos, tiles
       set_position(default_position);
       break;
     }
-  };
+  }, [set_position, default_position]);
 
-  const drag = (e, ui) => {
+  const drag = useCallback((e, ui) => {
     const { x, y } = ui;
     set_position({ x, y });
-  };
+  }, [set_position]);
 
   return (
     <>
