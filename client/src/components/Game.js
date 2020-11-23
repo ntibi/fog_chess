@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Over from "./Over"
 import "./Board.css"
 import setup from "../game/setup"
@@ -60,7 +60,7 @@ export default function Game(props) {
     }
   }, [turn, controls])
 
-  const restart = () => {
+  const restart = useCallback(() => {
     const pieces = add_moves(get_default_pieces())
     const turn = first_color
     set_over()
@@ -70,9 +70,9 @@ export default function Game(props) {
       turn,
     }])
     set_turn(turn)
-  }
+  }, [set_over, set_pieces, set_history, set_turn])
 
-  const move = (src, dst) => {
+  const move = useCallback((src, dst) => {
     let {
       pieces: new_pieces,
       turn: new_turn,
@@ -95,16 +95,16 @@ export default function Game(props) {
     if (online && turn == controls) {
       send_move({ src, dst })
     }
-  }
+  }, [pieces, history, turn, online, send_move, set_pieces, set_history, set_turn, controls])
 
-  const start_online = (socket, color) => {
+  const start_online = useCallback((socket, color) => {
     restart()
     set_online(true)
     set_controls(color)
     set_socket(socket)
     if (color !== controls)
       send_move(true)
-  }
+  }, [restart, set_online, set_controls, set_socket, controls, send_move])
 
 
   return (
