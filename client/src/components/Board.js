@@ -144,7 +144,7 @@ export default function Board({ history, pieces, controls, fog_enabled, coords_e
       {ghost_pieces.map(x => <GhostPiece
         type={x.type}
         color={x.color}
-        tileSize={tilesize}
+        tilesize={tilesize}
         pos={x.pos}
         key={x.id}
       />)}
