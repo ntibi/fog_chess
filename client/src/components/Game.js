@@ -26,8 +26,8 @@ const add_moves = (pieces) => pieces.map(piece => ({
 export default function Game() {
   const [level, set_level] = useState(config.level.default)
   const [over, set_over] = useState(false)
-  const [coords, set_coords] = useState(false)
-  const [fog, set_fog] = useState(true)
+  const [coords_enabled, set_coords] = useState(false)
+  const [fog_enabled, set_fog] = useState(true)
   const [turn, set_turn] = useState(first_color)
   const [pieces, set_pieces] = useState(add_moves(get_default_pieces()))
   const [history, set_history] = useState([{
@@ -115,19 +115,19 @@ export default function Game() {
       />
       <Board
         pieces={pieces}
-        fog={fog}
+        fog_enabled={fog_enabled}
         turn={turn}
         controls={controls}
         over={over}
-        coords={coords}
+        coords_enabled={coords_enabled}
         move={move}
         history={history}
       />
       <Interface
-        coords={coords}
-        toggle_coords={() => set_coords(!coords)}
-        fog={fog}
-        toggle_fog={() => set_fog(!fog)}
+        coords_enabled={coords_enabled}
+        toggle_coords={() => set_coords(!coords_enabled)}
+        fog_enabled={fog_enabled}
+        toggle_fog={() => set_fog(!fog_enabled)}
         thinking={turn !== controls}
         engine_config={config}
         level={level}

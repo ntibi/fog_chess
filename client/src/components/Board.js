@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Tile from "./Tile";
 import Piece from "./Piece";
 import "./Board.css";
@@ -9,29 +9,31 @@ import GhostPiece from "./GhostPiece";
 import { forEachTile } from "../game/tiles";
 import useWindowSize from "../hooks/useWindowSize";
 
-export default function Board(props) {
+const cancel = (e) => {
+  e.preventDefault();
+  return false;
+};
+
+export default function Board({ history, pieces, controls, fog_enabled, coords_enabled, turn, move, history }) {
   const [selected, select] = useState();
 
   const size = useWindowSize();
   const tilesize = Math.floor((Math.min(size.width, size.height) / Math.max(maxx, maxy) * 0.66));
 
-  const mouse_down = (e) => {
+  const mouse_down = useCallback((e) => {
     switch (e.button) {
     case 0: // left click
     case 2: // right click
       select();
       break;
     }
-  };
+  }, [select]);
 
-  const cancel = (e) => {
-    e.preventDefault();
-    return false;
-  };
+  const last = history[history.length - 1];
 
-  const last = props.history[props.history.length - 1];
-
-  const allies = props.pieces.filter(piece => piece.color === props.controls);
+  const allies = useMemo(() =>
+    pieces.filter(piece => piece.color === controls),
+    [pieces, controls]);
   const visible = compute_visible(allies);
   if (last.ate)
     set_visible(last.ate.coords, visible);
@@ -45,7 +47,7 @@ export default function Board(props) {
   forEachTile(maxx, maxy, (x, y) => {
     const coords = { x, y };
     let highlighted = false;
-    const pos = props.controls === first_color ?
+    const pos = controls === first_color ?
       coords :
       { x: maxy - coords.x, y: maxy - coords.y, };
     _pos_to_coords[`${pos.x} ${pos.y}`] = coords;
@@ -60,17 +62,17 @@ export default function Board(props) {
         pos={pos}
         tilesize={tilesize}
         color={!((x + y) % 2) ? "light" : "dark"}
-        visible={!props.fog || is_visible(coords, visible)}
+        visible={!fog_enabled || is_visible(coords, visible)}
         fog_strength={fog_strength(coords, visible)}
-        visible_coords={props.coords}
+        visible_coords={coords_enabled}
         highlighted={highlighted}
       />
     );
   });
 
-  const pieces_to_render = (props.fog ?
-    props.pieces.filter(piece => is_visible(piece.coords, visible)) :
-    props.pieces)
+  const pieces_to_render = (fog_enabled ?
+    pieces.filter(piece => is_visible(piece.coords, visible)) :
+    pieces)
     .map(piece => <Piece
       key={piece.id}
       type={piece.type}
@@ -81,24 +83,24 @@ export default function Board(props) {
       pos_to_coords={pos_to_coords}
       coords_to_pos={coords_to_pos}
       moves={piece.moves}
-      movable={props.turn === piece.color && piece.color === props.controls}
+      movable={turn === piece.color && piece.color === controls}
       selected={selected && selected.id === piece.id}
       select={() => select(piece)}
       deselect={() => select()}
-      owner={piece.color === props.controls}
-      move={(dst) => props.move(piece.coords, dst)}
+      owner={piece.color === controls}
+      move={(dst) => move(piece.coords, dst)}
     />);
 
   const ghost_pieces = (() => {
     const out = [];
-    if (props.history.length < 2 || props.turn !== props.controls)
+    if (history.length < 2 || turn !== controls)
       return [];
-    const { pieces: prev_pieces } = props.history[props.history.length - 2];
-    const prev_allies = prev_pieces.filter(piece => piece.color === props.controls);
+    const { pieces: prev_pieces } = history[history.length - 2];
+    const prev_allies = prev_pieces.filter(piece => piece.color === controls);
     const prev_visible = compute_visible(prev_allies);
     prev_pieces.forEach(prev_piece => {
-      if (prev_piece.color !== props.turn && is_visible(prev_piece.coords, prev_visible)) {
-        const new_pos_piece = props.pieces.find(x => x.id === prev_piece.id);
+      if (prev_piece.color !== turn && is_visible(prev_piece.coords, prev_visible)) {
+        const new_pos_piece = pieces.find(x => x.id === prev_piece.id);
         if (new_pos_piece && !is_visible(new_pos_piece.coords, visible)) {
           out.push({
             ...prev_piece,
