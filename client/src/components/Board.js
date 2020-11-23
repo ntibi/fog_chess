@@ -29,48 +29,65 @@ export default function Board({ history, pieces, controls, fog_enabled, coords_e
     }
   }, [select]);
 
-  const last = history[history.length - 1];
+  const last = useMemo(() => history[history.length - 1], [history]);
 
   const allies = useMemo(() =>
     pieces.filter(piece => piece.color === controls),
     [pieces, controls]);
-  const visible = compute_visible(allies);
-  if (last.ate)
-    set_visible(last.ate.coords, visible);
 
-  const tiles = [];
+  const visible = useMemo(() => {
+    const visible = compute_visible(allies);
+    if (last.ate)
+      set_visible(last.ate.coords, visible);
+    return visible
+  }, [last, allies])
 
-  const _pos_to_coords = {};
-  const _coords_to_pos = {};
-  const pos_to_coords = (v) => _pos_to_coords[`${v.x} ${v.y}`];
-  const coords_to_pos = (v) => _coords_to_pos[`${v.x} ${v.y}`];
-  forEachTile(maxx, maxy, (x, y) => {
-    const coords = { x, y };
-    let highlighted = false;
-    const pos = controls === first_color ?
-      coords :
-      { x: maxy - coords.x, y: maxy - coords.y, };
-    _pos_to_coords[`${pos.x} ${pos.y}`] = coords;
-    _coords_to_pos[`${coords.x} ${coords.y}`] = pos;
+  const {
+    tiles,
+    pos_to_coords,
+    coords_to_pos,
+  } = useMemo(() => {
+    const _pos_to_coords = {};
+    const _coords_to_pos = {};
+    const pos_to_coords = (v) => _pos_to_coords[`${v.x} ${v.y}`];
+    const coords_to_pos = (v) => _coords_to_pos[`${v.x} ${v.y}`];
 
-    if ((selected && same_coords(selected.coords, coords)) || (last.move && same_coords(coords, last.move.dst)))
-      highlighted = true;
-    tiles.push(
-      <Tile
-        key={`${x} ${y}`}
-        coords={coords}
-        pos={pos}
-        tilesize={tilesize}
-        color={!((x + y) % 2) ? "light" : "dark"}
-        visible={!fog_enabled || is_visible(coords, visible)}
-        fog_strength={fog_strength(coords, visible)}
-        visible_coords={coords_enabled}
-        highlighted={highlighted}
-      />
-    );
-  });
+    const tiles = []
 
-  const pieces_to_render = (fog_enabled ?
+    forEachTile(maxx, maxy, (x, y) => {
+
+      const coords = { x, y };
+      let highlighted = false;
+      const pos = controls === first_color ?
+        coords :
+        { x: maxy - coords.x, y: maxy - coords.y, };
+      _pos_to_coords[`${pos.x} ${pos.y}`] = coords;
+      _coords_to_pos[`${coords.x} ${coords.y}`] = pos;
+
+      if ((selected && same_coords(selected.coords, coords)) || (last.move && same_coords(coords, last.move.dst)))
+        highlighted = true;
+      tiles.push(
+        <Tile
+          key={`${x} ${y}`}
+          coords={coords}
+          pos={pos}
+          tilesize={tilesize}
+          color={!((x + y) % 2) ? "light" : "dark"}
+          visible={!fog_enabled || is_visible(coords, visible)}
+          fog_strength={fog_strength(coords, visible)}
+          visible_coords={coords_enabled}
+          highlighted={highlighted}
+        />
+      );
+    });
+    return {
+      tiles,
+      pos_to_coords,
+      coords_to_pos,
+    }
+  }, [controls, selected, last, tiles, tilesize, coords_enabled])
+
+  const pieces_to_render = useMemo(() => (fog_enabled ?
     pieces.filter(piece => is_visible(piece.coords, visible)) :
     pieces)
     .map(piece => <Piece
@@ -89,9 +106,9 @@ export default function Board({ history, pieces, controls, fog_enabled, coords_e
       deselect={() => select()}
       owner={piece.color === controls}
       move={(dst) => move(piece.coords, dst)}
-    />);
+    />), [fog_enabled, pieces, visible, tilesize, coords_to_pos, pos_to_coords, turn, controls, selected, select])
 
-  const ghost_pieces = (() => {
+  const ghost_pieces = useMemo(() => {
     const out = [];
     if (history.length < 2 || turn !== controls)
       return [];
@@ -110,7 +127,7 @@ export default function Board({ history, pieces, controls, fog_enabled, coords_e
       }
     });
     return out;
-  })();
+  }, [ history, controls, turn ]);
 
   return (
     <div
