@@ -9,8 +9,8 @@ const start = async (id1, id2) => {
 
     const assignedColors = shuffle(colors)
 
-    await redis.hmset(`game:${id1}`, "opponent", id2, "color", assignedColors[0], "turn", assignedColors[0] === "w")
-    await redis.hmset(`game:${id2}`, "opponent", id1, "color", assignedColors[1], "turn", assignedColors[1] === "w")
+    await redis.hmset(`game:${id1}`, "opponent", id2, "color", assignedColors[0], "turn", assignedColors[0] === "w", "connected", true)
+    await redis.hmset(`game:${id2}`, "opponent", id1, "color", assignedColors[1], "turn", assignedColors[1] === "w", "conntected", true)
 
     await io().to(socket1).emit("start", {
         color: assignedColors[0]
@@ -32,7 +32,31 @@ const move = async (session_id, src, dst) => {
     return true
 }
 
+const disconnect = async (session_id) => {
+    await redis.hmset(`game:${session_id}`, "connected", false)
+    const [opponent, connected] = await redis.hmget(`game:${session_id}`, "opponent", "connected")
+    if (!opponent)
+        return
+    console.log(`${session_id} was in a game`)
+    const socket = await redis.get(`client:${opponent}`)
+    if (connected && socket) {
+        await io().to(socket).emit("info", {
+            message: "opponent disconnected",
+        })
+        console.log(`${session_id} opponent (${opponent}) was notified`)
+    } else {
+        await redis.del(session_id, opponent)
+        console.log(`${session_id} opponent (${opponent}) disconnected too, stopped the game`)
+    }
+}
+
+const recover = async (session_id) => {
+
+}
+
 module.exports = {
     start,
     move,
+    disconnect,
+    recover,
 }

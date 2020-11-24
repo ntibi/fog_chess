@@ -1,4 +1,5 @@
 const redis = require("./redis")
+const game = require("./game")
 
 const connect = async (session_id, socket_id) => {
     await redis.set(`client:${session_id}`, socket_id)
@@ -7,9 +8,10 @@ const connect = async (session_id, socket_id) => {
 }
 
 const disconnect = async (session_id) => {
-    const to_delete = await redis.keys(`*:${session_id}`);
-    await redis.del(...to_delete);
+    const to_delete = await redis.keys(`client:${session_id}`);
+    await redis.del(to_delete);
     console.log(`disconnected client ${session_id}`)
+    await game.disconnect(session_id)
     return true
 }
 

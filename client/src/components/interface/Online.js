@@ -17,6 +17,7 @@ export default function Online({ start, started }) {
         set_connected(true);
       });
       socket.on("disconnect", () => set_connected(false));
+      socket.on("info", (data) => console.log(data));
     }
   }, [socket]);
 
