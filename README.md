@@ -43,4 +43,7 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] switch memorystore to redis
 
 
+- [ ] when resizing to a really small window the pieces positions are shifted
+
+
 - [ ] get good in frontend and design ¯\_(ツ)_/¯
