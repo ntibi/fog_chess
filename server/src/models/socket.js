@@ -1,6 +1,5 @@
 const socket = require("socket.io")
 const client = require("./client");
-const matchmaking = require("./matchmaking");
 
 let io
 
