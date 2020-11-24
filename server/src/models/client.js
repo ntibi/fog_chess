@@ -15,7 +15,6 @@ const disconnect = async (session_id) => {
     return true
 }
 
-
 module.exports = {
     connect,
     disconnect,

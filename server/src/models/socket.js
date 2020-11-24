@@ -1,10 +1,9 @@
 const socket = require("socket.io")
 const client = require("./client");
-
-let io
+const { io, set } = require("./io")
 
 const set_listeners = () => {
-    io.on("connection", async (sock) => {
+    io().on("connection", async (sock) => {
         const session_id = sock.handshake.sessionID
         await client.connect(session_id, sock.id)
         sock.on("disconnect", async () => {
@@ -14,17 +13,16 @@ const set_listeners = () => {
 }
 
 const connect = (http, session) => {
-    io = socket(http, {
+    set(socket(http, {
         origins: "*:*",
         serveClient: false,
         path: "/api/socket.io",
-    });
-    io.use(session)
+    }));
+    io().use(session)
     set_listeners()
     console.log("socket created")
 }
 
 module.exports = {
     connect,
-    io: () => io,
 }

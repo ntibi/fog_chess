@@ -1,4 +1,4 @@
-const { io } = require("./socket")
+const { io } = require("./io")
 const { shuffle } = require("lodash")
 const redis = require("./redis")
 
@@ -45,13 +45,20 @@ const disconnect = async (session_id) => {
         })
         console.log(`${session_id} opponent (${opponent}) was notified`)
     } else {
-        await redis.del(session_id, opponent)
+        await redis.del(`game:${session_id}`, `game:${opponent}`)
         console.log(`${session_id} opponent (${opponent}) disconnected too, stopped the game`)
     }
 }
 
 const recover = async (session_id) => {
-
+    const [ opponent, turn ] = await redis.hmget(`game:${session_id}`, "opponent", "turn")
+    if (opponent && turn) {
+        console.log(`recovering ${session_id} game against ${opponent}`)
+        const player_socket = await redis.get(`client:${session_id}`)
+        const opponent_socket = await redis.get(`client:${opponent}`)
+        // await io().to(player_socket).emit("recover")
+        // await io().to(opponent_socket).emit("recover")
+    }
 }
 
 module.exports = {

@@ -1,7 +1,6 @@
 const redis = require("./redis")
 const { zip } = require("lodash")
 const { start } = require("./game")
-const { io } = require("./socket")
 
 const LOCK_NAME = "queue"
 
