@@ -3,6 +3,7 @@ import "./Interface.css";
 import Thinking from "./Thinking";
 import CapturedCounts from "./CapturedCounts";
 import { color_name } from "../../game/rules";
+import { Card, Button, ButtonGroup, Slider, Switch } from "@blueprintjs/core";
 
 export default function Interface({
   pieces,
@@ -10,8 +11,8 @@ export default function Interface({
   engine_config,
   controls,
   thinking,
-  coords,
-  fog,
+  coords_enabled,
+  fog_enabled,
   level,
   set_level,
   switch_controls,
@@ -20,26 +21,29 @@ export default function Interface({
 }) {
 
   return (
-    <div className="interface">
-      <div className="group">
-        <CapturedCounts controls={controls} pieces={pieces} />
-      </div>
-      <div className="group">
+    <Card className="controls">
+      {/* <Card className="thinking">
         <Thinking thinking={thinking} />
-        {!online && <p>computer depth {level.current}</p>}
-        {!online && <input
-          type="range"
-          min={String(engine_config.level.min)}
-          max={String(engine_config.level.max)}
-          value={String(level)}
-          className="slider"
-          onChange={(e) => {set_level(Number(e.target.value));}} />}
-      </div>
-      <div className="group">
-        <button className={`control-button ${coords ? "checked" : "unchecked"}`} onClick={toggle_coords}>coords</button>
-        {!online && <button className={`control-button ${fog ? "checked" : "unchecked"}`} onClick={toggle_fog}>fog</button>}
-        {!online && <button className={"control-button"} onClick={switch_controls}>{color_name[controls]}</button>}
-      </div>
-    </div>
+      </Card> */}
+      {!online && <Card className="computer">
+        <p>computer depth {level.current}</p>
+        <Slider
+          min={engine_config.level.min}
+          max={engine_config.level.max}
+          value={level}
+          onChange={set_level}
+        />
+      </Card>}
+      <Card className="buttons">
+        <ButtonGroup vertical={true}>
+          <Switch checked={coords_enabled} onChange={toggle_coords}>coords</Switch>
+          {!online && <Switch checked={fog_enabled} onChange={toggle_fog}>fog</Switch>}
+          {!online && <Button onClick={switch_controls}>{color_name[controls]}</Button>}
+        </ButtonGroup>
+      </Card>
+      <Card className="captured">
+        <CapturedCounts controls={controls} pieces={pieces} />
+      </Card>
+    </Card>
   );
 }

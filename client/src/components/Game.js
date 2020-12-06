@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import "./Game.css"
 import Over from "./Over"
-import "./Board.css"
 import setup from "../game/setup"
 import { moves } from "../game/moves"
 import { first_color, apply_move, other_color } from "../game/rules"
@@ -108,7 +108,7 @@ export default function Game() {
 
 
   return (
-    <div>
+    <div className="game">
       <Online
       start={start_online}
       started={online}

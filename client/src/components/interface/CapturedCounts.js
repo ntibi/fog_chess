@@ -35,7 +35,6 @@ export default function CapturedCounts({ pieces, controls }) {
     return players;
   }, [ pieces, controls ]);
 
-
   return (
     <div>
       {
@@ -52,7 +51,8 @@ export default function CapturedCounts({ pieces, controls }) {
             </p>
             <CapturedPieces
               color={other_color(color)}
-              pieces_number={players[color].eaten_pieces_counts}
+              eaten_pieces_numbers={players[color].eaten_pieces_counts}
+              alive_pieces_number={Object.values(players[other_color(color)].alive_pieces_counts).reduce((acc, v) => acc + v, 0)}
             />
           </div>);
         })
