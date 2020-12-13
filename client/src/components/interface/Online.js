@@ -5,6 +5,7 @@ import { useAxios } from "../../utils/axios";
 import io from "socket.io-client";
 import { Card, Button, Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
+import Toaster from "./Toaster";
 
 export default function Online({ start, started }) {
   const [{ data, loading, error }, refetch] = useAxios("/api/isup", {
@@ -16,11 +17,17 @@ export default function Online({ start, started }) {
   useEffect(() => {
     if (socket) {
       socket.on("connect", () => {
-        socket.on("start", ({ color }) => start(socket, color));
+        socket.on("start", ({ color }) => {
+          Toaster.show({ message: "game started", intent: "success" });
+          start(socket, color);
+        });
         set_connected(true);
       });
-      socket.on("disconnect", () => set_connected(false));
-      socket.on("info", (data) => console.log(data));
+      socket.on("disconnect", () => {
+        Toaster.show({ message: "socket disconnected", intent: "warning" });
+        set_connected(false);
+      });
+      socket.on("info", ({ message }) => Toaster.show({ message, intent: "primary" }));
     }
   }, [socket]);
 

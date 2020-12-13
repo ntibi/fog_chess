@@ -1,0 +1,14 @@
+.online_menu {
+    display: flex;
+    flex-direction: column;
+    top: 5px;
+    left: 5px;
+    padding: 10px;
+    position: absolute;
+}
+
+.online {
+    margin: 10px auto;
+    flex-basis: auto;
+    text-align: center;
+}
