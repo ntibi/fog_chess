@@ -4,7 +4,12 @@ import Piece from "./Piece";
 import "./Board.css";
 import { same_coords } from "../game/moves";
 import { first_color, maxx, maxy } from "../game/rules";
-import { compute_visible, fog_strength, is_visible, set_visible } from "../game/fog";
+import {
+  compute_visible,
+  fog_strength,
+  is_visible,
+  set_visible,
+} from "../game/fog";
 import GhostPiece from "./GhostPiece";
 import { forEachTile } from "../game/tiles";
 import useWindowSize from "../hooks/useWindowSize";
@@ -29,13 +34,11 @@ export default function Board({
   const board = useRef(null);
 
   const tilesize = useMemo(() => {
-    if (!board.current)
-    return 0;
+    if (!board.current) return 0;
     const { clientWidth: width, clientHeight: height } = board.current;
-    return Math.floor(
-      Math.min(width / (maxx + 1), height / (maxy + 1))
-    );
+    return Math.floor(Math.min(width / (maxx + 1), height / (maxy + 1)));
   }, [board, size]);
+  console.log(tilesize)
 
   const mouse_down = useCallback(
     (e) => {
@@ -168,27 +171,28 @@ export default function Board({
   }, [history, controls, turn]);
 
   return (
-    <div
-      className="board"
-      style={{
-        // width: `${tilesize * (maxx + 1)}px`,
-        // height: `${tilesize * (maxy + 1)}px`,
-      }}
-      onMouseDown={mouse_down}
-      onContextMenu={cancel}
-      ref={board}
-    >
-      {tiles}
-      {pieces_to_render}
-      {ghost_pieces.map((x) => (
-        <GhostPiece
-          type={x.type}
-          color={x.color}
-          tilesize={tilesize}
-          pos={x.pos}
-          key={x.id}
-        />
-      ))}
+    <div ref={board} className="board-wrapper">
+      <div
+        className="board"
+        onMouseDown={mouse_down}
+        onContextMenu={cancel}
+        style={{
+          width: `${tilesize * (maxx + 1)}px`,
+          height: `${tilesize * (maxy + 1)}px`,
+        }}
+      >
+        {tiles}
+        {pieces_to_render}
+        {ghost_pieces.map((x) => (
+          <GhostPiece
+            type={x.type}
+            color={x.color}
+            tilesize={tilesize}
+            pos={x.pos}
+            key={x.id}
+          />
+        ))}
+      </div>
     </div>
   );
 }
