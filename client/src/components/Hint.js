@@ -1,7 +1,7 @@
 import React from "react";
 import "./Hint.css";
 
-export default function Tile({ tilesize, pos, move }) {
+export default function Hint({ tilesize, pos, move }) {
   const hint_zone_style = {
     width: `${tilesize}px`,
     height: `${tilesize}px`,
