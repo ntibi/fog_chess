@@ -38,7 +38,6 @@ export default function Board({
     const { clientWidth: width, clientHeight: height } = board.current;
     return Math.floor(Math.min(width / (maxx + 1), height / (maxy + 1)));
   }, [board, size]);
-  console.log(tilesize)
 
   const mouse_down = useCallback(
     (e) => {
