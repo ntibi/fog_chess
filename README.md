@@ -19,9 +19,6 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] allow drawing/marking on board
 
 
-- [ ] measure the real tile size (might be 1px off)
-
-
 - [ ] limit bundle size (check out lazy load)
 
 
@@ -37,19 +34,10 @@ chess variant with imperfect information known as [dark chess](https://en.wikipe
 - [ ] handle game leave
 
 
-- [ ] warn user on socket disconnect
-
-
 - [ ] switch memorystore to redis
 
 
-- [ ] when resizing to a really small window the pieces positions are shifted
-
-
 - [ ] store (and check ?) the game in backend to allow recovery
-
-
-- [ ] add popups/toasts/... to display info from backend
 
 
 - [ ] get good in frontend and design ¯\_(ツ)_/¯
