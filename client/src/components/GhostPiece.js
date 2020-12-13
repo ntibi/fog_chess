@@ -5,8 +5,7 @@ function GhostPiece({ pos, tilesize, color, type }) {
   const style = {
     width: `${tilesize}px`,
     height: `${tilesize}px`,
-    left: `${pos.x * tilesize}px`,
-    top: `${pos.y * tilesize}px`,
+    transform: `translate(${pos.x * tilesize}px, ${pos.y * tilesize}px)`,
     position: "absolute",
     opacity: 0.2,
   };
