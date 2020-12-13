@@ -1,4 +1,4 @@
-.board-wrapper {
+.board_wrapper {
     flex-grow: 1;
     flex-basis: 100%;
     max-height: calc(min(100vh, 100vw) - 200px);

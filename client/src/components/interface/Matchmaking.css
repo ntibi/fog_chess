@@ -1,13 +1,16 @@
 @keyframes waiting_icon {
-    0%   { transform: rotate(0deg); }
-    25%  { transform: rotate(160deg); }
-    50%  { transform: rotate(180deg); }
-    75%  { transform: rotate(200deg); }
-    100%   { transform: rotate(360deg); }
+    0%   { transform: rotateY(0deg); }
+    100%   { transform: rotateY(180deg); }
   }
   
 .waiting_icon {
   animation-name: waiting_icon;
   animation-duration: 1s;
   animation-iteration-count: infinite;
-} 
+}
+
+.matchmaking {
+  margin: 10px auto;
+  flex-basis: auto;
+  text-align: center;
+}

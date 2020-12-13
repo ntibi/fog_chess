@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./Online.css";
-import { Refresh, Warning } from "@material-ui/icons";
 import Matchmaking from "./Matchmaking";
 import { useAxios } from "../../utils/axios";
 import io from "socket.io-client";
+import { Card, Button, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 
 export default function Online({ start, started }) {
-  const [{ data, loading, error }, refetch] = useAxios("/api/isup", { manual: true });
-  const [ socket, set_socket ] = useState();
-  const [ connected, set_connected ] = useState();
+  const [{ data, loading, error }, refetch] = useAxios("/api/isup", {
+    manual: true,
+  });
+  const [socket, set_socket] = useState();
+  const [connected, set_connected] = useState();
 
   useEffect(() => {
     if (socket) {
       socket.on("connect", () => {
-        socket.on("start", ({color}) => start(socket, color));
+        socket.on("start", ({ color }) => start(socket, color));
         set_connected(true);
       });
       socket.on("disconnect", () => set_connected(false));
@@ -21,37 +24,38 @@ export default function Online({ start, started }) {
     }
   }, [socket]);
 
-  const buttonStyle = {
-    visibility: data ? "hidden" : "visible",
-  };
-
+ 
   let message;
-  if (loading) {
-    message = <p>reaching backend ...</p>;
-  } else if (error) {
-    message = <p>connection error <Warning style={{color: "#ff3300"}} /></p>;
+  if (error) {
+    message = <p>
+        connection error <Icon icon={IconNames.ERROR} iconSize={20} intent="danger" />
+    </p>;
   } else if (data) {
-    message = <p onClick={refetch}>currently online<Refresh fontSize="small"/> </p>;
+    message = <p>
+        currently online <Icon icon={IconNames.GLOBE_NETWORK} iconSize={20} intent="success" />
+    </p>;
   } else if (!data) {
-    message = <p>currently offline</p>;
+    message = <p>currently offline <Icon icon={IconNames.GLOBE_NETWORK} iconSize={20} intent="warning" /></p>;
   }
 
   const connect = useCallback(async () => {
     await refetch();
 
-    const socket = io(window.location.href, { path: "/api/socket.io"});
+    const socket = io(window.location.href, { path: "/api/socket.io" });
     set_socket(socket);
   }, [refetch, set_socket, window.location.href]);
 
   return (
-    <div className="online_menu">
-      {message}
-      {!data && !loading &&
-              <button style={buttonStyle} onClick={connect}>go online</button>}
-      {!started && data && connected && <Matchmaking
-        socket={socket}
-        started={started}
-      />}
-    </div>
+    <Card elevation={1} className="online_menu">
+      <div className="online">
+        {message}
+        <Button loading={loading} active={data} onClick={(data || loading) ? refetch : connect}>
+            go online
+        </Button>
+      </div>
+      {!started && data && connected && (
+        <Matchmaking socket={socket} started={started} />
+      )}
+    </Card>
   );
 }

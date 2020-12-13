@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { axios } from "../../utils/axios";
-import { HourglassEmpty } from "@material-ui/icons";
 import WaitingCount from "./WaitingCount";
+import { Button, Icon } from "@blueprintjs/core";
+import { IconNames } from "@blueprintjs/icons";
 import "./Matchmaking.css";
 
 export default function Matchmaking({ started }) {
@@ -20,15 +21,15 @@ export default function Matchmaking({ started }) {
     </div>;
   else if (waiting)
     message = <div>
-      <p>finding an opponent <HourglassEmpty className="waiting_icon" /></p>
+      <p>finding an opponent <Icon icon={IconNames.PERSON} className="waiting_icon" /></p>
       <WaitingCount/>
     </div>;
   else
     message = <div>
-      <button onClick={queue}>matchmaking</button>
+      <Button onClick={queue}>matchmaking</Button>
     </div>;
   return (
-    <div>
+    <div className="matchmaking">
       {message}
     </div>
   );

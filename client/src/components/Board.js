@@ -170,7 +170,7 @@ export default function Board({
   }, [history, controls, turn]);
 
   return (
-    <div ref={board} className="board-wrapper">
+    <div ref={board} className="board_wrapper">
       <div
         className="board"
         onMouseDown={mouse_down}
