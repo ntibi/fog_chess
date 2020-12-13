@@ -5,16 +5,14 @@
 .eatenpiece {
   position: relative;
   width: 45px;
-  width: 45px;
+  height: 45px;
   transform: scale(0.70);
   margin-left: -25px;
 }
 
 .filler {
   position: relative;
-  width: 45px;
-  width: 45px;
+  height: 45px;
   transform: scale(0.70);
-  margin-left: -25px;
-  visibility: hidden;
+  text-align: center;
 }

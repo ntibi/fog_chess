@@ -37,26 +37,40 @@ export default function CapturedCounts({ pieces, controls }) {
 
   return (
     <div>
-      {
-        colors.map(color => {
-          const score = players[color].value - players[other_color(color)].value;
-          let score_text;
-          if (score > 0)
-            score_text = `+${score}`;
-          else if (score < 0)
-            score_text = score;
-          return (<div key={color}>
-            <p className={`score ${color === controls ? "yourscore" : ""}`}>
-              {color_name[color]} {score_text}
-            </p>
-            <CapturedPieces
-              color={other_color(color)}
-              eaten_pieces_numbers={players[color].eaten_pieces_counts}
-              alive_pieces_number={Object.values(players[other_color(color)].alive_pieces_counts).reduce((acc, v) => acc + v, 0)}
-            />
-          </div>);
-        })
-      }
+      <table>
+        <thead>
+          <tr>
+            {colors.map(color => {
+              const score = players[color].value - players[other_color(color)].value;
+              let score_text;
+              if (score > 0)
+                score_text = `+${score}`;
+              else if (score < 0)
+                score_text = score;
+              return (
+                <th key={color} style={{ fontWeight: "normal" }}>
+                  <p className={`score ${color === controls ? "yourscore" : ""}`}>
+                    {color_name[color]} {score_text}
+                  </p>
+                </th>);
+            }
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {colors.map(color => {
+              return (<td key={color}>
+                <CapturedPieces
+                  color={other_color(color)}
+                  default_pieces_count={Object.values(players[color].default_pieces_counts).reduce((acc, v) => acc + v, 0)}
+                  eaten_pieces_numbers={players[color].eaten_pieces_counts}
+                />
+              </td>);
+            })}
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
