@@ -11,8 +11,9 @@ const start = async (id1, id2) => {
 
     const assignedColors = shuffle(colors)
 
-    await redis.hmset(`game:${id1}`, "opponent", id2, "color", assignedColors[0], "turn", assignedColors[0] === "w", "connected", true)
-    await redis.hmset(`game:${id2}`, "opponent", id1, "color", assignedColors[1], "turn", assignedColors[1] === "w", "conntected", true)
+    const ts = new Date().getTime()
+    await redis.hmset(`game:${id1}`, "opponent", id2, "color", assignedColors[0], "turn", assignedColors[0] === "w", "connected", true, "ts", ts)
+    await redis.hmset(`game:${id2}`, "opponent", id1, "color", assignedColors[1], "turn", assignedColors[1] === "w", "connected", true, "ts", ts)
 
     await io().to(socket1).emit("start", {
         color: assignedColors[0]
