@@ -1,5 +1,6 @@
 const socket = require("socket.io")
 const client = require("./client");
+const game = require("./game")
 const { io, set } = require("./io")
 
 const set_listeners = () => {
@@ -7,7 +8,8 @@ const set_listeners = () => {
         const session_id = sock.handshake.sessionID
         await client.connect(session_id, sock.id)
         sock.on("disconnect", async () => {
-            await client.disconnect(session_id)
+          await client.disconnect(session_id);
+          await game.disconnect(session_id);
         });
     });
 }

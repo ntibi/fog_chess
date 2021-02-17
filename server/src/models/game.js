@@ -1,11 +1,13 @@
 const { io } = require("./io")
 const { shuffle } = require("lodash")
 const redis = require("./redis")
+const client = require("./client")
 
 const colors = ["w", "b"]
 
 const start = async (id1, id2) => {
-    const [ socket1, socket2 ] = await redis.mget([`client:${id1}`, `client:${id2}`])
+    const socket1 = await client.get_socket(id1)
+    const socket2 = await client.get_socket(id2)
 
     const assignedColors = shuffle(colors)
 
@@ -27,7 +29,7 @@ const move = async (session_id, src, dst) => {
         return false
     await redis.hmset(`game:${session_id}`, "turn", false);
     await redis.hmset(`game:${opponent}`, "turn", true);
-    const opponent_socket_id = await redis.get(`client:${opponent}`)
+    const opponent_socket_id = await client.get_socket(opponent)
     io().to(opponent_socket_id).emit("move", { src, dst })
     return true
 }
@@ -38,7 +40,7 @@ const disconnect = async (session_id) => {
     if (!opponent)
         return
     console.log(`${session_id} was in a game`)
-    const socket = await redis.get(`client:${opponent}`)
+    const socket = await client.get_socket(opponent)
     if (connected && socket) {
         await io().to(socket).emit("info", {
             message: "opponent disconnected",
@@ -54,8 +56,8 @@ const recover = async (session_id) => {
     const [ opponent, turn ] = await redis.hmget(`game:${session_id}`, "opponent", "turn")
     if (opponent && turn) {
         console.log(`recovering ${session_id} game against ${opponent}`)
-        const player_socket = await redis.get(`client:${session_id}`)
-        const opponent_socket = await redis.get(`client:${opponent}`)
+        const player_socket = await client.get_socket(session_id)
+        const opponent_socket = await client.get_socket(opponent)
         // await io().to(player_socket).emit("recover")
         // await io().to(opponent_socket).emit("recover")
     }
