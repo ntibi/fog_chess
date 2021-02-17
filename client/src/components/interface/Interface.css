@@ -19,9 +19,6 @@
   flex-grow: 1;
 }
 
-.thinking {
-}
-
 .computer {
   flex-direction: column;
   order: 1;

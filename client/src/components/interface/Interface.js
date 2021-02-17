@@ -1,6 +1,5 @@
 import React from "react";
 import "./Interface.css";
-import Thinking from "./Thinking";
 import CapturedCounts from "./CapturedCounts";
 import { color_name } from "../../game/rules";
 import { Card, Button, ButtonGroup, Slider, Switch } from "@blueprintjs/core";
@@ -10,7 +9,6 @@ export default function Interface({
   online,
   engine_config,
   controls,
-  thinking,
   coords_enabled,
   fog_enabled,
   level,
@@ -22,9 +20,6 @@ export default function Interface({
 
   return (
     <Card className="controls">
-      {/* <Card className="thinking">
-        <Thinking thinking={thinking} />
-      </Card> */}
       {!online && <Card className="computer">
         <p>computer depth {level.current}</p>
         <Slider
