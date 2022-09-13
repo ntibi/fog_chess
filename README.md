@@ -2,9 +2,6 @@
 
 chess variant with imperfect information known as [dark chess](https://en.wikipedia.org/wiki/Dark_chess) or [kriegspiel](https://en.wikipedia.org/wiki/Kriegspiel_(chess))
 
-[play it here](https://chess.ntibi.fr)
-
-
 ## TODO
 
 - [ ] use zobrist hashing for transposition
